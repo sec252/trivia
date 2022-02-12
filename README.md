@@ -46,6 +46,6 @@ this will make entrypoint.sh executable
 ### Seed database
 
 open up another terminal and run:
-`docker-compose exec web python server.py seed_db`
+`docker exec trivia_api_1 python server.py seed_db`
 
 
