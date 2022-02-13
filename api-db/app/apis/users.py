@@ -1,47 +1,52 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request
-
+from ..services.users import UserService
 
 api = Namespace("users", "Users Resource")
 
-user = api.model(
+users = api.model(
     "UserModel",
     {
         "id": fields.Integer,
         "username": fields.String,
     },
 )
-#  Dummy Data
 
-users_list = [
-    {"id": 1, "username": "David"},
-    {"id": 2, "username": "Chance"},
-    {"id": 3, "username": "Rob"},
-]
+user = api.model(
+    "UserModel",
+    {
+        "id": fields.Integer,
+        "username": fields.String,
+        "active": fields.Boolean,
+    },
+)
 
 
 @api.route("/")
 class UsersCollection(Resource):
-    @api.marshal_with(user, envelope="users")
+    @api.marshal_with(users, envelope="users")
     def get(self):
-        from app.models.users import User
-
-        users = User.query.all()
-        if not users:
-            return users_list
-
-        return users
+        return UserService.get_users()
 
     @api.marshal_with(user, envelope="user")
     def post(self):
-        from app.models.users import User
-        from app import db
-
         username = request.json["username"]
-        if not username:
-            print("Error")
-        else:
-            new_user = User(username=username)
-            db.session.add(new_user)
-            db.session.commit()
-            return new_user
+        return UserService.create_user(username)
+
+
+@api.route("/<int:user_id>")
+@api.param("user_id", "User identifier")
+class UserItem(Resource):
+    @api.marshal_with(user, envelope="user")
+    def get(self, user_id):
+        print(user_id)
+        return UserService.get_user_by_id(user_id)
+
+    @api.marshal_with(user, envelope="user")
+    def put(self, user_id):
+        payload = request.json
+        return UserService.edit_user(user_id, payload)
+    
+    def delete(self, user_id):
+        return UserService.delete_user(user_id)
+
