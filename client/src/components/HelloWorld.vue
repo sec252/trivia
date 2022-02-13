@@ -11,9 +11,26 @@
           p(:key="trivia.id") {{trivia.id}}) {{trivia.name}}
       v-col(cols=6)
         h1 Users
-        div(v-for="user in users")
+        v-row(v-for="user in users")
           p(:key="user.id") {{user.id}}) {{user.username}}
+          v-spacer
+          v-btn(icon color="error"  @click="deleteUser(user.id)").mr-2
+            v-icon mdi-delete
+          v-tooltip(bottom)
+            template(v-slot:activator='{ on, attrs }')
+              v-icon(color='info' dark v-bind='attrs' v-on='on'
+              @click="editUser(user.id)").mr-2
+                | mdi-pencil
+            span Edit User
+          v-tooltip(bottom)
+            template(v-slot:activator='{ on, attrs }')
+              v-icon(color='primary' dark v-bind='attrs' v-on='on'
+              @click="getUser(user.id)").mr-2
+                | mdi-account
+            span Get User Details
 
+    UserDetailsDialog(:dialog="detailsDialog", :user="user" @cancel="detailsDialog=false")
+    UserEditFormDialog(:dialog="editDialog", :user="user" @cancel="editDialog=false" @update="updateUser")
 
 
 
@@ -26,18 +43,22 @@ export default {
   components: {
     TriviaCreatePool: () => import("./TriviaCreatePool.vue"),
     UserCreateForm: () => import("./UserCreateForm.vue"),
+    UserDetailsDialog: () => import("./UserDetailsDialog.vue"),
+    UserEditFormDialog: () => import("./UserEditFormDialog.vue"),
   },
   data: () => ({
+    detailsDialog: false,
+    editDialog: false,
     users: [],
+    user: {},
     triviaPools: [],
   }),
   async created() {
     const users = await axios.get("http://localhost:5000/api/users/");
-    console.log(users);
+
     this.users = users.data?.users;
 
     const trivias = await axios.get("http://localhost:5000/api/trivias/");
-    console.log(trivias);
     this.triviaPools = trivias.data?.body;
   },
   methods: {
@@ -50,6 +71,30 @@ export default {
     },
     addTrivia(trivia) {
       this.triviaPools.push(trivia);
+    },
+    async getUser(id) {
+      const user = (await axios.get(`http://localhost:5000/api/users/${id}`))
+        .data?.user;
+      this.user = user;
+      this.detailsDialog = true;
+    },
+    async editUser(id) {
+      this.user = (
+        await axios.get(`http://localhost:5000/api/users/${id}`)
+      ).data?.user;
+      this.editDialog = true;
+    },
+    updateUser(user) {
+      this.users.forEach((u) => {
+        if (u.id == user.id) {
+          u.username = user.username;
+          u.active = user.active;
+        }
+      });
+    },
+    async deleteUser(id) {
+      await axios.delete(`http://localhost:5000/api/users/${id}`);
+      this.users = this.users.filter((u) => u.id !== id);
     },
   },
 };
