@@ -13,7 +13,6 @@ users_list = [
 
 class UserService:
     def get_user_by_id(id):
-        print(id, "from service")
         user = User.query.filter(User.id == id).first()
 
         if not user:
@@ -41,7 +40,7 @@ class UserService:
         user = UserService.get_user_by_id(id)
         username = payload["username"]
         if not username:
-            raise BadRequest("need user name")
+            raise BadRequest("need username")
         active = payload["active"]
         user.username = username
         user.active = active
