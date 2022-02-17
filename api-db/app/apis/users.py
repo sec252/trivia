@@ -39,14 +39,12 @@ class UsersCollection(Resource):
 class UserItem(Resource):
     @api.marshal_with(user, envelope="user")
     def get(self, user_id):
-        print(user_id)
         return UserService.get_user_by_id(user_id)
 
     @api.marshal_with(user, envelope="user")
     def put(self, user_id):
         payload = request.json
         return UserService.edit_user(user_id, payload)
-    
+
     def delete(self, user_id):
         return UserService.delete_user(user_id)
-

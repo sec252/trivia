@@ -1,12 +1,11 @@
 <template lang="pug">
 .text-center
-  v-dialog(v-model='dialog' width='500')
+  v-dialog(v-model='dialog' fullscreen)
     v-card
       v-card-title.text-h5.grey.lighten-2
-        | {{user.username}}
+        | {{trivia.name}}
       v-card-text.pt-4
-        p(v-if="user.active").green--text This user is active
-        p(v-else).red--text This user is not active
+        p TODO: ADD CREATE/EDIT QUESTIONS
       v-divider
       v-card-actions
         v-spacer
@@ -17,12 +16,12 @@
 
 <script>
 export default {
-  name: "UserDetailsDialog",
+  name: "TriviaDetailDialog",
   props: {
     dialog: {
       type: Boolean,
     },
-    user: {
+    trivia: {
       type: Object,
     },
   },

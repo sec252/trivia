@@ -5,14 +5,29 @@
         TriviaCreatePool(@new="addTrivia")
       v-col(cols=6)
         UserCreateForm(@new="addUser")
-      v-col(cols=6)
+      v-col(cols=6): v-card
         h1 Trivia Pools
-        div(v-for="trivia in triviaPools")
-          p(:key="trivia.id") {{trivia.id}}) {{trivia.name}}
-      v-col(cols=6)
+        v-row( no-gutters v-for="trivia in triviaPools" :key="trivia.name").px-3
+          p {{trivia.id}}) {{trivia.name}}
+          v-spacer
+          v-btn(icon color="error" @click="deleteTrivia(triviaPool.id)").mr-2
+            v-icon mdi-delete
+          v-tooltip(bottom)
+            template(v-slot:activator='{ on, attrs }')
+              v-icon(color='info' dark v-bind='attrs' v-on='on'
+              @click="editTriviaPool(trivia.id)").mr-2
+                | mdi-pencil
+            span Edit Trivia Pool
+          v-tooltip(bottom)
+            template(v-slot:activator='{ on, attrs }')
+              v-icon(color='primary' dark v-bind='attrs' v-on='on'
+              @click="getTrivia(trivia.id)").mr-2
+                | mdi-clipboard-list-outline
+            span Get Trivia Details
+      v-col(cols=6): v-card
         h1 Users
-        v-row(v-for="user in users")
-          p(:key="user.id") {{user.id}}) {{user.username}}
+        v-row(no-gutters v-for="user in users" :key="user.name").px-3
+          p {{user.id}}) {{user.username}}
           v-spacer
           v-btn(icon color="error"  @click="deleteUser(user.id)").mr-2
             v-icon mdi-delete
@@ -31,6 +46,8 @@
 
     UserDetailsDialog(:dialog="detailsDialog", :user="user" @cancel="detailsDialog=false")
     UserEditFormDialog(:dialog="editDialog", :user="user" @cancel="editDialog=false" @update="updateUser")
+    TriviaEditFormDialog(:dialog="editTriviaDialog" :triviaPool="triviaPool" @cancel="editTriviaDialog=false", @updateTrivia="updateTriviaPool")
+    TriviaDetailDialog(:dialog="triviaDetailsDialog" :trivia="triviaPool" @cancel="triviaDetailsDialog=false")
 
 
 
@@ -38,6 +55,7 @@
 
 <script>
 import axios from "axios";
+import TriviaDetailDialog from "./TriviaDetailDialog.vue";
 export default {
   name: "HelloWorld",
   components: {
@@ -45,12 +63,17 @@ export default {
     UserCreateForm: () => import("./UserCreateForm.vue"),
     UserDetailsDialog: () => import("./UserDetailsDialog.vue"),
     UserEditFormDialog: () => import("./UserEditFormDialog.vue"),
+    TriviaEditFormDialog: () => import("./TriviaEditFormDialog.vue"),
+    TriviaDetailDialog,
   },
   data: () => ({
     detailsDialog: false,
+    triviaDetailsDialog: false,
     editDialog: false,
+    editTriviaDialog: false,
     users: [],
     user: {},
+    triviaPool: {},
     triviaPools: [],
   }),
   async created() {
@@ -78,11 +101,24 @@ export default {
       this.user = user;
       this.detailsDialog = true;
     },
+    async getTrivia(id) {
+      const trivia = (
+        await axios.get(`http://localhost:5000/api/trivias/${id}`)
+      ).data?.trivia;
+      this.triviaPool = trivia;
+      this.triviaDetailsDialog = true;
+    },
     async editUser(id) {
       this.user = (
         await axios.get(`http://localhost:5000/api/users/${id}`)
       ).data?.user;
       this.editDialog = true;
+    },
+    async editTriviaPool(id) {
+      this.triviaPool = (
+        await axios.get(`http://localhost:5000/api/trivias/${id}`)
+      ).data?.trivia;
+      this.editTriviaDialog = true;
     },
     updateUser(user) {
       this.users.forEach((u) => {
@@ -92,9 +128,20 @@ export default {
         }
       });
     },
+    updateTriviaPool(triviaPool) {
+      this.triviaPools.forEach((t) => {
+        if (t.id == triviaPool.id) {
+          t.name = triviaPool.name;
+        }
+      });
+    },
     async deleteUser(id) {
       await axios.delete(`http://localhost:5000/api/users/${id}`);
       this.users = this.users.filter((u) => u.id !== id);
+    },
+    async deleteTrivia(id) {
+      await axios.delete(`http://localhost:5000/api/trivias/${id}`);
+      this.triviaPools = this.triviaPools.filter((t) => t.id !== id);
     },
   },
 };
