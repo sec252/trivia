@@ -55,7 +55,7 @@
 
 <script>
 import axios from "axios";
-import TriviaDetailDialog from "./TriviaDetailDialog.vue";
+
 export default {
   name: "HelloWorld",
   components: {
@@ -64,7 +64,7 @@ export default {
     UserDetailsDialog: () => import("./UserDetailsDialog.vue"),
     UserEditFormDialog: () => import("./UserEditFormDialog.vue"),
     TriviaEditFormDialog: () => import("./TriviaEditFormDialog.vue"),
-    TriviaDetailDialog,
+    TriviaDetailDialog: () => import("./TriviaDetailDialog.vue"),
   },
   data: () => ({
     detailsDialog: false,
