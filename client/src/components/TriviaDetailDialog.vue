@@ -5,7 +5,7 @@
       v-card-title.text-h5.grey.lighten-2
         | {{trivia.name}}
       v-card-text.pt-4
-        p TODO: ADD CREATE/EDIT QUESTIONS
+        p TODO: ADD PLAYING TRIVIA FUNCTIONALITY
       v-divider
       v-card-actions
         v-spacer

@@ -54,3 +54,33 @@ class TriviaService:
         db.session.delete(trivia)
         db.session.commit()
         return None
+
+    def get_quesition_by_id(id):
+        question = Trivia.query.filter(Trivia.id == id).first()
+
+        if not question:
+            raise BadRequest("Question does not exist")
+        return question
+
+    def create_question(id, payload):
+
+        text = payload["text"]
+        answer = payload["answer"]
+
+        if not text or not answer:
+            raise BadRequest("Missing fields")
+        else:
+            trivia_pool = TriviaService.get_trivia_pool_by_id(id)
+            new_question = Trivia(
+                text=text, answer=answer, trivia_pool_id=trivia_pool.id
+            )
+            db.session.add(new_question)
+            db.session.commit()
+            return new_question
+
+    def delete_question(id):
+        # TODO DELETE QUESTION BY ID
+        question = TriviaService.get_quesition_by_id(id)
+        db.session.delete(question)
+        db.session.commit()
+        return None
