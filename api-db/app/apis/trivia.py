@@ -18,6 +18,15 @@ trivia_pools = api.model(
     {
         "id": fields.Integer,
         "name": fields.String,
+        "createdDate": fields.String(attribute="created_date"),
+    },
+)
+
+trivia = api.model(
+    "Trivia",
+    {
+        "id": fields.Integer,
+        "name": fields.String,
         "questions": fields.List(fields.Nested(trivia_question)),
     },
 )
