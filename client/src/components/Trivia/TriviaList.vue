@@ -1,7 +1,7 @@
 <template lang="pug">
   v-row(dense no-gutters)
-    v-col(v-for="trivia in trivias" cols=12 md=6).pa-2
-      TriviaCard(:key="trivia.id" :title="trivia.name", :timestamp="trivia.createdDate")
+    v-col(v-for="trivia in trivias" cols=12 md=6 :key="trivia.id").pa-2
+      TriviaCard( :title="trivia.name", :timestamp="trivia.createdDate")
 </template>
 
 <script>

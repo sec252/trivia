@@ -1,11 +1,11 @@
 <template lang="pug">
 div
   v-app-bar( dense)
-    v-toolbar-title#title(@click="toHome") Trivia App
+    v-toolbar-title#title Trivia App
     v-spacer
     v-btn(text to="/admin") Secret Page
     v-btn(text to="/about") About
-    v-btn(text) Trivias
+    v-btn(text to="/") Trivias
     v-btn(text) Catagories
     v-menu(left bottom)
       template(v-slot:activator='{ on, attrs }')

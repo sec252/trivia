@@ -7,8 +7,10 @@
         v-text-field(
           label="Search Trivia Pools"
           prepend-icon="mdi-magnify"
+          @input="handleSearch"
+          v-model="search"
         )
-    TriviaList(:trivias="triviaPools")
+    TriviaList(:trivias="filteredSearch")
 </template>
 
 <script>
@@ -20,6 +22,8 @@ export default {
   },
   data: () => ({
     triviaPools: [],
+    filteredSearch: [],
+    search: "",
   }),
   created() {
     this.getTrivias();
@@ -28,6 +32,13 @@ export default {
     async getTrivias() {
       const trivias = await axios.get("http://localhost:5000/api/trivias/");
       this.triviaPools = trivias.data?.body;
+      this.filteredSearch = this.triviaPools;
+    },
+    handleSearch(val) {
+      let temp = this.triviaPools;
+      if (val !== "") temp = temp.filter((t) => t.name.includes(val));
+      this.filteredSearch = temp;
+      if (val == "") return;
     },
   },
 };
