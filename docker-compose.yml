@@ -1,17 +1,6 @@
 version: '3.8'
 
 services:
-  client:
-    container_name: trivia_client
-    build:
-      context: ./client
-      dockerfile: dockerfile
-    volumes:
-      - './client:/client'
-    ports:
-      - '8080:8080'
-    restart: unless-stopped
-
   api:
     build: ./api-db
     command: python server.py run -h 0.0.0.0
