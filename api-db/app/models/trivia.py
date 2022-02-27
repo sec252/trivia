@@ -1,4 +1,5 @@
 from app import db
+import datetime
 
 
 class TriviaPool(db.Model):
@@ -6,6 +7,7 @@ class TriviaPool(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def __init__(self, name):
         self.name = name

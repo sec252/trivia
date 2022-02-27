@@ -10,7 +10,7 @@
         v-row( no-gutters v-for="trivia in triviaPools" :key="trivia.name").px-3
           p {{trivia.id}}) {{trivia.name}}
           v-spacer
-          v-btn(icon color="error" @click="deleteTrivia(triviaPool.id)").mr-2
+          v-btn(icon color="error" @click="deleteTrivia(trivia.id)").mr-2
             v-icon mdi-delete
           v-tooltip(bottom)
             template(v-slot:activator='{ on, attrs }')
@@ -43,7 +43,6 @@
               @click="getUser(user.id)").mr-2
                 | mdi-account
             span Get User Details
-
     UserDetailsDialog(:dialog="detailsDialog", :user="user" @cancel="detailsDialog=false")
     UserEditFormDialog(:dialog="editDialog", :user="user" @cancel="editDialog=false" @update="updateUser")
     TriviaEditFormDialog(:dialog="editTriviaDialog" :triviaPool="triviaPool" @cancel="editTriviaDialog=false", @updateTrivia="updateTriviaPool")
@@ -59,12 +58,12 @@ import axios from "axios";
 export default {
   name: "HelloWorld",
   components: {
-    TriviaCreatePool: () => import("./TriviaCreatePool.vue"),
+    TriviaCreatePool: () => import("./Trivia/TriviaCreatePool.vue"),
     UserCreateForm: () => import("./UserCreateForm.vue"),
     UserDetailsDialog: () => import("./UserDetailsDialog.vue"),
     UserEditFormDialog: () => import("./UserEditFormDialog.vue"),
-    TriviaEditFormDialog: () => import("./TriviaEditFormDialog.vue"),
-    TriviaDetailDialog: () => import("./TriviaDetailDialog.vue"),
+    TriviaEditFormDialog: () => import("./Trivia/TriviaEditFormDialog.vue"),
+    TriviaDetailDialog: () => import("./Trivia/TriviaDetailDialog.vue"),
   },
   data: () => ({
     detailsDialog: false,
