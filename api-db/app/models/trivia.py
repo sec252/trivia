@@ -1,5 +1,7 @@
+from unicodedata import category
 from app import db
 import datetime
+from app.models.category import Category
 
 
 class TriviaPool(db.Model):
@@ -8,14 +10,21 @@ class TriviaPool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
 
-    def __init__(self, name):
+    def __init__(self, name, category_id):
         self.name = name
+        self.category_id = category_id
 
     @property
     def questions(self):
         all_questions = Trivia.query.filter(Trivia.trivia_pool_id == self.id).all()
         return all_questions
+
+    @property
+    def category(self):
+        category = Category.query.filter(Category.id == self.category_id).first()
+        return category.name
 
 
 class Trivia(db.Model):

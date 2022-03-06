@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "App",
   components: {
@@ -15,5 +17,13 @@ export default {
   data: () => ({
     //
   }),
+  methods: {
+    ...mapActions({
+      getUser: "auth/fetchUser",
+    }),
+  },
+  async created() {
+    await this.getUser();
+  },
 };
 </script>

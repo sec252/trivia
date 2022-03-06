@@ -1,3 +1,4 @@
+from unicodedata import category
 from werkzeug.exceptions import BadRequest
 from flask import request
 from app.models.users import User
@@ -30,10 +31,11 @@ class TriviaService:
 
     def create_trivia_pool(payload):
         name = payload["name"]
+        category_id = payload["category_id"]
         if not name:
             raise BadRequest("Trivia pool needs a name")
         else:
-            trivia = TriviaPool(name=name)
+            trivia = TriviaPool(name=name, category_id=category_id)
             db.session.add(trivia)
             db.session.commit()
             return trivia

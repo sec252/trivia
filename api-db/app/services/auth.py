@@ -4,10 +4,8 @@ from app.models.users import User
 from flask import jsonify
 from flask_jwt_extended import (
     create_access_token,
-    create_refresh_token,
-    set_access_cookies,
-    set_refresh_cookies,
     unset_jwt_cookies,
+    current_user,
     jwt_required,
 )
 from app import db
@@ -24,11 +22,8 @@ class AuthService:
             db.session.add(new_user)
             db.session.commit()
             access_token = create_access_token(identity=new_user.id)
-            refresh_token = create_refresh_token(identity=new_user.id)
-            response = jsonify({"msg": "Sign up successful"})
-            set_access_cookies(response, access_token)
-            set_refresh_cookies(response, refresh_token)
-            return response
+
+            return jsonify(access_token=access_token)
         raise BadRequest("Username is already taken")
 
     def login_user(username, password):
@@ -36,17 +31,15 @@ class AuthService:
         if not user:
             raise BadRequest("Invalid Credentials")
         if user.authenticate(password):
-            response = jsonify({"msg": "login successful"})
             access_token = create_access_token(identity=user.id)
-            set_access_cookies(response, access_token)
-            refresh_token = create_refresh_token(identity=user.id)
-            response = jsonify({"msg": "Login successful"})
-            set_access_cookies(response, access_token)
-            set_refresh_cookies(response, refresh_token)
-            return response
+            return jsonify(access_token=access_token)
         raise BadRequest("Invalid Credentials")
 
     def logout_user():
         response = jsonify({"msg": "Logout successful"})
         unset_jwt_cookies(response)
         return response
+
+    @jwt_required()
+    def user():
+        return current_user
