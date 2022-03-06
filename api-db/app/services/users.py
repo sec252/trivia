@@ -1,14 +1,13 @@
 from werkzeug.exceptions import BadRequest
-from app.models.users import User
+from werkzeug.security import generate_password_hash
+from app.models.users import User, Role
 from app import db
+from flask_jwt_extended import (
+    current_user,
+    jwt_required,
+)
 
 #  Dummy Data
-
-users_list = [
-    {"id": 1, "username": "David"},
-    {"id": 2, "username": "Chance"},
-    {"id": 3, "username": "Rob"},
-]
 
 
 class UserService:
@@ -20,21 +19,32 @@ class UserService:
 
         return user
 
+    @jwt_required()
     def get_users():
-        users = User.query.all()
-        if not users:
-            return users_list
+        users = User.query
+        if current_user.role == Role.USER:
+            users = users.filter(User.id == current_user.id).all()
+
+        if current_user.role == Role.ADMIN:
+            users = users.all()
 
         return users
 
-    def create_user(username):
-        if not username:
-            raise BadRequest("need user name")
-        else:
-            new_user = User(username=username)
-            db.session.add(new_user)
-            db.session.commit()
-            return new_user
+    @jwt_required()
+    def create_user(payload):
+        if current_user.role == Role.ADMIN:
+            username = payload["username"]
+            password = payload["password"]
+            if not username:
+                raise BadRequest("need user name")
+            else:
+                new_user = User(
+                    username=username, password=generate_password_hash(password)
+                )
+                db.session.add(new_user)
+                db.session.commit()
+                return new_user
+        raise BadRequest("Not authorized")
 
     def edit_user(id, payload):
         user = UserService.get_user_by_id(id)

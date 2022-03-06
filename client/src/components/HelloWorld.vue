@@ -8,7 +8,7 @@
       v-col(cols=6): v-card
         h1 Trivia Pools
         v-row( no-gutters v-for="trivia in triviaPools" :key="trivia.name").px-3
-          p {{trivia.id}}) {{trivia.name}}
+          p {{trivia.id}}) {{trivia.name}} - ({{trivia.category}})
           v-spacer
           v-btn(icon color="error" @click="deleteTrivia(trivia.id)").mr-2
             v-icon mdi-delete
@@ -54,7 +54,7 @@
 
 <script>
 import axios from "axios";
-
+import { UsersAPI } from "../services/users";
 export default {
   name: "HelloWorld",
   components: {
@@ -76,9 +76,7 @@ export default {
     triviaPools: [],
   }),
   async created() {
-    const users = await axios.get("http://localhost:5000/api/users/");
-
-    this.users = users.data?.users;
+    this.users = (await UsersAPI.getUserCollection()).users;
 
     const trivias = await axios.get("http://localhost:5000/api/trivias/");
     this.triviaPools = trivias.data?.body;
@@ -95,8 +93,7 @@ export default {
       this.triviaPools.push(trivia);
     },
     async getUser(id) {
-      const user = (await axios.get(`http://localhost:5000/api/users/${id}`))
-        .data?.user;
+      const user = (await UsersAPI.getUserItem(id)).user;
       this.user = user;
       this.detailsDialog = true;
     },
@@ -108,9 +105,7 @@ export default {
       this.triviaDetailsDialog = true;
     },
     async editUser(id) {
-      this.user = (
-        await axios.get(`http://localhost:5000/api/users/${id}`)
-      ).data?.user;
+      this.user = (await UsersAPI.getUserItem(id)).user;
       this.editDialog = true;
     },
     async editTriviaPool(id) {
@@ -135,7 +130,7 @@ export default {
       });
     },
     async deleteUser(id) {
-      await axios.delete(`http://localhost:5000/api/users/${id}`);
+      await UsersAPI.deleteUserItem(id);
       this.users = this.users.filter((u) => u.id !== id);
     },
     async deleteTrivia(id) {

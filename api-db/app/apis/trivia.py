@@ -12,13 +12,20 @@ trivia_question = api.model(
         "answer": fields.String,
     },
 )
-
+category = api.model(
+    "Category",
+    {
+        "id": fields.Integer,
+        "name": fields.String,
+    },
+)
 trivia_pools = api.model(
     "TriviaPools",
     {
         "id": fields.Integer,
         "name": fields.String,
         "createdDate": fields.String(attribute="created_date"),
+        "category": fields.String
     },
 )
 

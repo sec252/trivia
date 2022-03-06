@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { UsersAPI } from "../services/users";
 export default {
   name: "UserEditFormDialog",
   props: {
@@ -41,9 +41,7 @@ export default {
         active: this.user.active,
       };
 
-      const editedUser = (
-        await axios.put(`http://localhost:5000/api/users/${id}`, user)
-      ).data?.user;
+      const editedUser = (await UsersAPI.editUserItem(id, user)).user;
 
       this.$emit("update", editedUser);
       this.$emit("cancel");

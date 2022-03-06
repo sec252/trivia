@@ -1,17 +1,17 @@
 from flask_restx import Namespace, Resource, fields
-from flask import request, jsonify
-from ..services.auth import AuthService
-from flask_jwt_extended import (
-    jwt_required,
-)
+from flask import request
+from app.services.auth import AuthService
+
 
 api = Namespace("auth", "Authentication Resource")
 
-register = api.model(
-    "Register",
+user = api.model(
+    "UserModel",
     {
+        "id": fields.Integer,
         "username": fields.String,
-        "password": fields.String,
+        "active": fields.Boolean,
+        "role": fields.String(attribute="role.value"),
     },
 )
 
@@ -36,3 +36,10 @@ class LoginUser(Resource):
 class LogoutUser(Resource):
     def post(self):
         return AuthService.logout_user()
+
+
+@api.route("/user")
+class AuthUser(Resource):
+    @api.marshal_with(user, envelope="user")
+    def get(self):
+        return AuthService.user()
