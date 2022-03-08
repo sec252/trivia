@@ -1,31 +1,23 @@
 <template lang="pug">
   v-container
-    v-row.text-center
+    v-row
       v-col(cols=6)
         TriviaCreatePool(@new="addTrivia")
       v-col(cols=6)
-        UserCreateForm(@new="addUser")
-      v-col(cols=6): v-card
-        h1 Trivia Pools
-        v-row( no-gutters v-for="trivia in triviaPools" :key="trivia.name").px-3
-          p {{trivia.id}}) {{trivia.name}} - ({{trivia.category}})
-          v-spacer
-          v-btn(icon color="error" @click="deleteTrivia(trivia.id)").mr-2
-            v-icon mdi-delete
-          v-tooltip(bottom)
-            template(v-slot:activator='{ on, attrs }')
-              v-icon(color='info' dark v-bind='attrs' v-on='on'
-              @click="editTriviaPool(trivia.id)").mr-2
-                | mdi-pencil
-            span Edit Trivia Pool
-          v-tooltip(bottom)
-            template(v-slot:activator='{ on, attrs }')
-              v-icon(color='primary' dark v-bind='attrs' v-on='on'
-              @click="getTrivia(trivia.id)").mr-2
-                | mdi-clipboard-list-outline
-            span Get Trivia Details
-      v-col(cols=6): v-card
-        h1 Users
+        v-card
+          v-card-title.text-h5 Username: 
+            strong.ml-2 {{authUser.username}}
+          v-card-text.pt-4
+            p(v-if="authUser.active").green--text Active User
+            p(v-else).red--text This user is not active
+            p Plays: 132
+          v-divider
+          v-card-actions
+            v-spacer
+            v-btn(text)
+              | Role: {{authUser.role}}
+      v-col(cols=6).text-center: v-card
+        h1.py-2 Users
         v-row(no-gutters v-for="user in users" :key="user.name").px-3
           p {{user.id}}) {{user.username}}
           v-spacer
@@ -43,6 +35,26 @@
               @click="getUser(user.id)").mr-2
                 | mdi-account
             span Get User Details
+      v-col(cols=6).text-center: v-card
+        h1.py-2 Trivia Pools
+        v-row( no-gutters v-for="trivia in triviaPools" :key="trivia.name").px-3
+          p {{trivia.id}}) {{trivia.name}} - ({{trivia.category}})
+          v-spacer
+          v-btn(icon color="error" @click="deleteTrivia(trivia.id)").mr-2
+            v-icon mdi-delete
+          v-tooltip(bottom)
+            template(v-slot:activator='{ on, attrs }')
+              v-icon(color='info' dark v-bind='attrs' v-on='on'
+              @click="editTriviaPool(trivia.id)").mr-2
+                | mdi-pencil
+            span Edit Trivia Pool
+          v-tooltip(bottom)
+            template(v-slot:activator='{ on, attrs }')
+              v-icon(color='primary' dark v-bind='attrs' v-on='on'
+              @click="getTrivia(trivia.id)").mr-2
+                | mdi-clipboard-list-outline
+            span Get Trivia Details
+
     UserDetailsDialog(:dialog="detailsDialog", :user="user" @cancel="detailsDialog=false")
     UserEditFormDialog(:dialog="editDialog", :user="user" @cancel="editDialog=false" @update="updateUser")
     TriviaEditFormDialog(:dialog="editTriviaDialog" :triviaPool="triviaPool" @cancel="editTriviaDialog=false", @updateTrivia="updateTriviaPool")
@@ -53,8 +65,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import { UsersAPI } from "../services/users";
+import { TriviaAPI } from "../services/trivia";
+import { mapGetters } from "vuex";
 export default {
   name: "HelloWorld",
   components: {
@@ -78,14 +91,15 @@ export default {
   async created() {
     this.users = (await UsersAPI.getUserCollection()).users;
 
-    const trivias = await axios.get("http://localhost:5000/api/trivias/");
-    this.triviaPools = trivias.data?.body;
+    this.triviaPools = (await TriviaAPI.getTriviaUserCollection()).body;
+  },
+  computed: {
+    ...mapGetters({
+      authUser: "auth/user",
+      isAuth: "auth/isLoggedIn",
+    }),
   },
   methods: {
-    async post() {
-      const user = { username: "asdadsa" };
-      await axios.post("http://localhost:5000/api/users/", user);
-    },
     addUser(user) {
       this.users.push(user);
     },
@@ -98,9 +112,7 @@ export default {
       this.detailsDialog = true;
     },
     async getTrivia(id) {
-      const trivia = (
-        await axios.get(`http://localhost:5000/api/trivias/${id}`)
-      ).data?.trivia;
+      const trivia = (await TriviaAPI.getTriviaItem(id)).trivia;
       this.triviaPool = trivia;
       this.triviaDetailsDialog = true;
     },
@@ -109,10 +121,12 @@ export default {
       this.editDialog = true;
     },
     async editTriviaPool(id) {
-      this.triviaPool = (
-        await axios.get(`http://localhost:5000/api/trivias/${id}`)
-      ).data?.trivia;
-      this.editTriviaDialog = true;
+      try {
+        this.triviaPool = (await TriviaAPI.getTriviaItem(id)).trivia;
+        this.editTriviaDialog = true;
+      } catch (error) {
+        console.error(error.response.data);
+      }
     },
     updateUser(user) {
       this.users.forEach((u) => {
@@ -134,7 +148,7 @@ export default {
       this.users = this.users.filter((u) => u.id !== id);
     },
     async deleteTrivia(id) {
-      await axios.delete(`http://localhost:5000/api/trivias/${id}`);
+      await TriviaAPI.deleteTriviaItem(id);
       this.triviaPools = this.triviaPools.filter((t) => t.id !== id);
     },
   },

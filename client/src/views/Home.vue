@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { TriviaAPI } from "../services/trivia";
 export default {
   name: "Home",
   components: {
@@ -30,8 +30,7 @@ export default {
   },
   methods: {
     async getTrivias() {
-      const trivias = await axios.get("http://localhost:5000/api/trivias/");
-      this.triviaPools = trivias.data?.body;
+      this.triviaPools = (await TriviaAPI.getTriviaCollection()).body;
       this.filteredSearch = this.triviaPools;
     },
     handleSearch(val) {

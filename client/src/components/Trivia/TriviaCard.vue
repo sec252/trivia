@@ -14,6 +14,9 @@ v-card(:color='color' dark)
       v-icon(left)
         | mdi-play
       | Play
+    v-spacer
+    v-card-subtitle.mr-6
+        | Author: {{author}}
 
   
 </template>
@@ -23,6 +26,11 @@ export default {
   name: "TriviaCard",
   props: {
     title: {
+      type: String,
+      required: false,
+      default: "asdadsads",
+    },
+    author: {
       type: String,
       required: false,
       default: "asdadsads",

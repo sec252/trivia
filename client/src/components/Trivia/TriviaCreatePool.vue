@@ -17,7 +17,7 @@ v-card
   v-divider
   v-card-actions
     v-spacer
-    v-btn(text @click="createTrivia") Create Trivia Pool Test
+    v-btn(text @click="createTrivia") Create Trivia Pool
 
         
 
@@ -26,8 +26,8 @@ v-card
 </template>
 
 <script>
-import axios from "axios";
 import { CategoriesAPI } from "../../services/category";
+import { TriviaAPI } from "../../services/trivia";
 export default {
   name: "TriviaCreatePool",
 
@@ -45,10 +45,7 @@ export default {
         name: this.name,
         category_id: this.select,
       };
-      console.log(trivia);
-      const newTrivia = (
-        await axios.post("http://localhost:5000/api/trivias/", trivia)
-      ).data.trivia;
+      const newTrivia = (await TriviaAPI.createTrivia(trivia)).trivia;
       this.name = "";
       this.select = null;
       this.$emit("new", newTrivia);

@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { TriviaAPI } from "../../services/trivia";
 export default {
   name: "TriviaEditFormDialog",
   props: {
@@ -70,16 +70,13 @@ export default {
       };
 
       const newQ = (
-        await axios.post(
-          `http://localhost:5000/api/trivias/${this.triviaPool.id}/questions`,
-          data
-        )
-      ).data.question;
+        await TriviaAPI.createTriviaPoolQuestions(this.triviaPool.id, data)
+      ).question;
 
       this.triviaPool.questions.push(newQ);
     },
     async deleteQuestion(id) {
-      await axios.delete(`http://localhost:5000/api/trivias/questions/${id}`);
+      await TriviaAPI.deleteTriviaQuestionItem(id);
 
       this.triviaPool.questions = this.triviaPool.questions.filter(
         (q) => q.id !== id
@@ -90,10 +87,9 @@ export default {
         name: this.triviaPool.name,
       };
 
-      const editedTriviaPool = (
-        await axios.put(`http://localhost:5000/api/trivias/${id}`, triviaPool)
-      ).data?.trivia;
-      console.log(editedTriviaPool);
+      const editedTriviaPool = (await TriviaAPI.editTriviaItem(id, triviaPool))
+        .trivia;
+
       this.$emit("updateTrivia", editedTriviaPool);
       this.$emit("cancel");
     },
