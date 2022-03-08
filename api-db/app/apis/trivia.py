@@ -12,6 +12,14 @@ trivia_question = api.model(
         "answer": fields.String,
     },
 )
+
+author = api.model(
+    "Author",
+    {
+        "id": fields.Integer,
+        "username": fields.String,
+    },
+)
 category = api.model(
     "Category",
     {
@@ -25,7 +33,8 @@ trivia_pools = api.model(
         "id": fields.Integer,
         "name": fields.String,
         "createdDate": fields.String(attribute="created_date"),
-        "category": fields.String
+        "category": fields.String,
+        "author": fields.Nested(author),
     },
 )
 
@@ -35,6 +44,7 @@ trivia = api.model(
         "id": fields.Integer,
         "name": fields.String,
         "questions": fields.List(fields.Nested(trivia_question)),
+        "category": fields.String,
     },
 )
 
@@ -57,11 +67,11 @@ class TriviaPoolCollection(Resource):
 @api.route("/<int:trivia_pool_id>")
 @api.param("trivia_pool_id", "Trivia Pool Identifier")
 class TriviaPoolItem(Resource):
-    @api.marshal_with(trivia_pools, envelope="trivia")
+    @api.marshal_with(trivia, envelope="trivia")
     def get(self, trivia_pool_id):
         return TriviaService.get_trivia_pool_by_id(trivia_pool_id)
 
-    @api.marshal_with(trivia_pools, envelope="trivia")
+    @api.marshal_with(trivia, envelope="trivia")
     def put(self, trivia_pool_id):
         payload = request.json
         return TriviaService.edit_trivia_pool(trivia_pool_id, payload)
@@ -90,3 +100,10 @@ class TriviaPoolQuestions(Resource):
     def delete(self, question_id):
         # Get all questions of given trivia pool
         return TriviaService.delete_question(question_id)
+
+
+@api.route("/user")
+class TriviaPoolUserCollection(Resource):
+    @api.marshal_with(trivia_pools, envelope="body")
+    def get(self):
+        return TriviaService.get_user_trivia_pools()

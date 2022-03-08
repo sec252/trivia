@@ -16,26 +16,7 @@
             v-spacer
             v-btn(text)
               | Role: {{authUser.role}}
-      v-col(cols=6).text-center: v-card
-        h1.py-2 Users
-        v-row(no-gutters v-for="user in users" :key="user.name").px-3
-          p {{user.id}}) {{user.username}}
-          v-spacer
-          v-btn(icon color="error"  @click="deleteUser(user.id)").mr-2
-            v-icon mdi-delete
-          v-tooltip(bottom)
-            template(v-slot:activator='{ on, attrs }')
-              v-icon(color='info' dark v-bind='attrs' v-on='on'
-              @click="editUser(user.id)").mr-2
-                | mdi-pencil
-            span Edit User
-          v-tooltip(bottom)
-            template(v-slot:activator='{ on, attrs }')
-              v-icon(color='primary' dark v-bind='attrs' v-on='on'
-              @click="getUser(user.id)").mr-2
-                | mdi-account
-            span Get User Details
-      v-col(cols=6).text-center: v-card
+      v-col(:cols="authUser.role =='admin' ? 6 : 12").text-center: v-card
         h1.py-2 Trivia Pools
         v-row( no-gutters v-for="trivia in triviaPools" :key="trivia.name").px-3
           p {{trivia.id}}) {{trivia.name}} - ({{trivia.category}})
@@ -54,6 +35,25 @@
               @click="getTrivia(trivia.id)").mr-2
                 | mdi-clipboard-list-outline
             span Get Trivia Details
+      v-col(cols=6 v-if="authUser.role =='admin'").text-center: v-card
+        h1.py-2 Users
+        v-row(no-gutters v-for="user in users" :key="user.name").px-3
+          p {{user.id}}) {{user.username}}
+          v-spacer
+          v-btn(icon color="error"  @click="deleteUser(user.id)").mr-2
+            v-icon mdi-delete
+          v-tooltip(bottom)
+            template(v-slot:activator='{ on, attrs }')
+              v-icon(color='info' dark v-bind='attrs' v-on='on'
+              @click="editUser(user.id)").mr-2
+                | mdi-pencil
+            span Edit User
+          v-tooltip(bottom)
+            template(v-slot:activator='{ on, attrs }')
+              v-icon(color='primary' dark v-bind='attrs' v-on='on'
+              @click="getUser(user.id)").mr-2
+                | mdi-account
+            span Get User Details
 
     UserDetailsDialog(:dialog="detailsDialog", :user="user" @cancel="detailsDialog=false")
     UserEditFormDialog(:dialog="editDialog", :user="user" @cancel="editDialog=false" @update="updateUser")

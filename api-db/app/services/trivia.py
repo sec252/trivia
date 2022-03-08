@@ -1,16 +1,13 @@
 from unicodedata import category
 from werkzeug.exceptions import BadRequest
 from flask import request
-from app.models.users import User
+from app.models.users import User, Role
 from app.models.trivia import Trivia, TriviaPool
 from app import db
-
-#  Dummy Data
-users_list = [
-    {"id": 1, "username": "David"},
-    {"id": 2, "username": "Chance"},
-    {"id": 3, "username": "Rob"},
-]
+from flask_jwt_extended import (
+    current_user,
+    jwt_required,
+)
 
 
 class TriviaService:
@@ -24,22 +21,36 @@ class TriviaService:
 
     def get_trivia_pools():
         trivia_pools = TriviaPool.query.all()
-        if not trivia_pools:
-            return []
+        return trivia_pools
+
+    @jwt_required()
+    def get_user_trivia_pools():
+        trivia_pools = TriviaPool.query
+        if current_user.role == Role.USER:
+            trivia_pools = trivia_pools.filter(
+                TriviaPool.creator_id == current_user.id
+            ).all()
+
+        if current_user.role == Role.ADMIN:
+            trivia_pools = trivia_pools.all()
 
         return trivia_pools
 
+    @jwt_required()
     def create_trivia_pool(payload):
         name = payload["name"]
         category_id = payload["category_id"]
         if not name:
             raise BadRequest("Trivia pool needs a name")
         else:
-            trivia = TriviaPool(name=name, category_id=category_id)
+            trivia = TriviaPool(
+                name=name, category_id=category_id, creator_id=current_user.id
+            )
             db.session.add(trivia)
             db.session.commit()
             return trivia
 
+    @jwt_required()
     def edit_trivia_pool(id, payload):
         trivia_pool = TriviaService.get_trivia_pool_by_id(id)
         name = payload["name"]
