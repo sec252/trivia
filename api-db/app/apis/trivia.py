@@ -34,6 +34,7 @@ trivia_pools = api.model(
         "name": fields.String,
         "createdDate": fields.String(attribute="created_date"),
         "category": fields.String,
+        "plays": fields.Integer,
         "author": fields.Nested(author),
     },
 )
@@ -107,3 +108,11 @@ class TriviaPoolUserCollection(Resource):
     @api.marshal_with(trivia_pools, envelope="body")
     def get(self):
         return TriviaService.get_user_trivia_pools()
+
+
+@api.route("/category/<int:id>")
+@api.param("id", "Category Identifier")
+class TriviaPoolCategoryCollection(Resource):
+    @api.marshal_with(trivia_pools, envelope="body")
+    def get(self, id):
+        return TriviaService.get_category_trivia_pools(id)

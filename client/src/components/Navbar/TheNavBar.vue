@@ -6,7 +6,7 @@ div
     v-btn(text to="/admin" v-if="isAuth") Secret Page
     v-btn(text to="/about") About
     v-btn(text to="/") Trivias
-    v-btn(text) Catagories
+    v-btn(text to="/categories") Categories
     v-menu(left bottom)
       template(v-slot:activator='{ on, attrs }')
         v-btn(icon v-bind='attrs' v-on='on')
@@ -51,6 +51,7 @@ export default {
     dialog: false,
     selectedItem: 1,
     register: false,
+    darkMode: false,
     menu: [
       {
         icon: "mdi-account-plus",
@@ -76,6 +77,12 @@ export default {
         func: v.handleLogin,
         isAuth: true,
       },
+      {
+        icon: "mdi-theme-light-dark",
+        title: "Dark Mode",
+        func: v.toggleDarkMode,
+        isAuth: null,
+      },
     ],
   }),
   computed: {
@@ -83,6 +90,14 @@ export default {
       authUser: "auth/user",
       isAuth: "auth/isLoggedIn",
     }),
+  },
+  created() {
+    if (localStorage.getItem("darkMode")) {
+      this.darkMode = JSON.parse(localStorage.getItem("darkMode"));
+      this.$vuetify.theme.dark = this.darkMode;
+    } else {
+      console.log("made it here 2");
+    }
   },
   methods: {
     ...mapActions({
@@ -95,17 +110,21 @@ export default {
       this.$router.push("/");
     },
     showIfAuth(show) {
+      if (show == null) return true;
       if (show && this.isAuth) {
         return true;
       } else if (!show && !this.isAuth) {
         return true;
       }
-
       return false;
     },
     handleLogin() {
       this.register = false;
       this.dialog = true;
+    },
+    toggleDarkMode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      localStorage.setItem("darkMode", this.$vuetify.theme.dark);
     },
     handleRegister() {
       this.register = true;

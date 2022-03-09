@@ -1,4 +1,3 @@
-from unicodedata import category
 from app import db
 import datetime
 from app.models.category import Category
@@ -10,6 +9,7 @@ class TriviaPool(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
+    plays = db.Column(db.Integer, default=0)
     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)

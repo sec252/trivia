@@ -23,6 +23,10 @@ class TriviaService:
         trivia_pools = TriviaPool.query.all()
         return trivia_pools
 
+    def get_category_trivia_pools(id):
+        trivia_pools = TriviaPool.query.filter(TriviaPool.category_id == id).all()
+        return trivia_pools
+
     @jwt_required()
     def get_user_trivia_pools():
         trivia_pools = TriviaPool.query
