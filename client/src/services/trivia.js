@@ -5,6 +5,10 @@ export const TriviaAPI = {
     const res = (await apiService.get("/trivias/")).data;
     return res;
   },
+  getTriviaCategoryCollection: async (id) => {
+    const res = (await apiService.get("/trivias/category/" + id)).data;
+    return res;
+  },
   getTriviaPoolQuestions: async (id) => {
     const res = (await apiService.get("/trivias/" + id + "/questions")).data;
     return res;
