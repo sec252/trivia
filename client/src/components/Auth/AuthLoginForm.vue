@@ -59,10 +59,6 @@ export default {
     show1: false,
     valid: true,
   }),
-  created() {
-    console.log(this.authUser);
-    console.log(this.isAuth);
-  },
   computed: {
     ...mapGetters({
       authUser: "auth/user",

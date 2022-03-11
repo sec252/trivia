@@ -96,7 +96,7 @@ export default {
       this.darkMode = JSON.parse(localStorage.getItem("darkMode"));
       this.$vuetify.theme.dark = this.darkMode;
     } else {
-      console.log("made it here 2");
+      localStorage.setItem("darkMode", this.darkMode);
     }
   },
   methods: {

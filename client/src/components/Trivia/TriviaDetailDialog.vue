@@ -2,7 +2,7 @@
 .text-center
   v-dialog(v-model='dialog' fullscreen)
     v-card
-      v-card-title.text-h5.grey.lighten-2
+      v-card-title.text-h5
         | {{trivia.name}}
       v-card-text.pt-4
         p TODO: ADD PLAYING TRIVIA FUNCTIONALITY
