@@ -11,13 +11,15 @@ div
         v-card-subtitle.pt-0
           | Total Plays
     v-card-actions
-      v-btn(text @click="$emit('play', id)")
-        v-icon(left)
-          | mdi-play
-        | Play
-      v-spacer
-      v-card-subtitle.mr-6
-          | Author: {{author}}
+      v-row(no-gutters)
+        v-col(cols=8)
+          v-btn(text @click="$emit('play', id)")
+            v-icon(left)
+              | mdi-play
+            | Play
+        v-col(cols=4).text-center
+          p.mt-2
+              | Author: {{author}}
 
 </template>
 
@@ -56,9 +58,9 @@ export default {
       return ts.toDateString();
     },
     color() {
-      if (this.plays < 10) {
+      if (this.plays < 20) {
         return "blue darken-4";
-      } else if (this.plays > 10 && this.plays < 100) {
+      } else if (this.plays >= 20 && this.plays < 100) {
         return "deep-orange darken-4";
       }
 

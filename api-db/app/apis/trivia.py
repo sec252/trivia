@@ -27,6 +27,12 @@ category = api.model(
         "name": fields.String,
     },
 )
+plays = api.model(
+    "Plays",
+    {
+        "plays": fields.Integer,
+    },
+)
 trivia_pools = api.model(
     "TriviaPools",
     {
@@ -116,3 +122,12 @@ class TriviaPoolCategoryCollection(Resource):
     @api.marshal_with(trivia_pools, envelope="body")
     def get(self, id):
         return TriviaService.get_category_trivia_pools(id)
+
+
+@api.route("/<int:trivia_pool_id>/plays")
+@api.param("trivia_pool_id", "Trivia Pool Identifier")
+class TriviaPlaysItem(Resource):
+    @api.marshal_with(plays, envelope="body")
+    def put(self, trivia_pool_id):
+        payload = request.json
+        return TriviaService.update_play_by_id(trivia_pool_id, payload)

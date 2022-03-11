@@ -43,6 +43,12 @@ export const TriviaAPI = {
     ).data;
     return res;
   },
+  updateTriviaPlays: async (id, data) => {
+    console.log(data);
+    const res = (await apiService.put(`/trivias/${id}/plays`, data)).data;
+
+    return res.body;
+  },
   deleteTriviaItem: async (id) => {
     await apiService.delete("/trivias/" + id, {
       headers: authHeader(),

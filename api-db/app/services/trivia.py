@@ -72,7 +72,7 @@ class TriviaService:
         db.session.commit()
         return None
 
-    def get_quesition_by_id(id):
+    def get_question_by_id(id):
         question = Trivia.query.filter(Trivia.id == id).first()
 
         if not question:
@@ -96,8 +96,21 @@ class TriviaService:
             return new_question
 
     def delete_question(id):
-        # TODO DELETE QUESTION BY ID
-        question = TriviaService.get_quesition_by_id(id)
+        question = TriviaService.get_question_by_id(id)
         db.session.delete(question)
         db.session.commit()
         return None
+
+    # TODO need to update triva plays so that users
+    # that played this trivia should not be able to update
+    # the play again. Also need to start saving ip addresses
+    # and doing the same. They cannot update the same trivia plays
+    # again.
+    def update_play_by_id(id, payload):
+        trivia = TriviaService.get_trivia_pool_by_id(id)
+        user_id = payload["userId"]
+        user = User.query.get(user_id)
+        print(user)
+        trivia.plays = trivia.plays + 1
+        db.session.commit()
+        return trivia
