@@ -81,7 +81,6 @@ export default {
   methods: {
     async getTrivias(id) {
       this.trivias = (await TriviaAPI.getTriviaCategoryCollection(id)).body;
-      console.log(this.trivias);
     },
   },
 };

@@ -2,7 +2,7 @@
 .text-center
   v-dialog(v-model='dialog' width='600')
     v-card
-      v-card-title.text-h5.grey.lighten-2
+      v-card-title.text-h5
         | {{triviaPool.name}}
       v-card-text
         v-text-field(v-model="triviaPool.name", label="Name").mt-2
@@ -18,7 +18,7 @@
                 @click="addQuestion"
                 ).ml-10.mt-6
                   | mdi-plus
-              span Edit User
+              span Add Question
       #card
         v-row( no-gutters).pl-6
           v-col(cols=5): p Questions
@@ -74,6 +74,8 @@ export default {
       ).question;
 
       this.triviaPool.questions.push(newQ);
+      this.newQuestion = "";
+      this.newAnswer = "";
     },
     async deleteQuestion(id) {
       await TriviaAPI.deleteTriviaQuestionItem(id);

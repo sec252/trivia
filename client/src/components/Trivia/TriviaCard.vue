@@ -1,30 +1,34 @@
 <template lang="pug">
-v-card(:color='color' dark)
-  v-row(no-gutters)
-    v-col(cols=8)
-      v-card-title.text-h5 {{title}}
-      v-card-subtitle
-        | Created at: {{date}}
-    v-col(cols=4).text-center
-      .text-h5.mt-3 {{plays}}
-      v-card-subtitle.pt-0
-        | Total Plays
-  v-card-actions
-    v-btn(text)
-      v-icon(left)
-        | mdi-play
-      | Play
-    v-spacer
-    v-card-subtitle.mr-6
-        | Author: {{author}}
+div
+  v-card(:color='color' dark)
+    v-row(no-gutters)
+      v-col(cols=8)
+        v-card-title.text-h5 {{title}}
+        v-card-subtitle
+          | Created at: {{date}}
+      v-col(cols=4).text-center
+        .text-h5.mt-3 {{plays}}
+        v-card-subtitle.pt-0
+          | Total Plays
+    v-card-actions
+      v-btn(text @click="$emit('play', id)")
+        v-icon(left)
+          | mdi-play
+        | Play
+      v-spacer
+      v-card-subtitle.mr-6
+          | Author: {{author}}
 
-  
 </template>
 
 <script>
 export default {
   name: "TriviaCard",
   props: {
+    id: {
+      type: Number,
+      required: true,
+    },
     title: {
       type: String,
       required: false,
