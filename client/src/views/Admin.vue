@@ -1,12 +1,12 @@
 <template lang="pug">
-  HelloWorld
+  AdminHome
 </template>
 
 <script>
 export default {
   name: "Admin",
   components: {
-    HelloWorld: () => import("../components/HelloWorld.vue"),
+    AdminHome: () => import("../components/AdminHome.vue"),
   },
 };
 </script>

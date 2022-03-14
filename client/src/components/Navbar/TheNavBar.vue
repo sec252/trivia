@@ -3,7 +3,7 @@ div
   v-app-bar( dense)
     v-toolbar-title#title Trivia App
     v-spacer
-    v-btn(text to="/admin" v-if="isAuth") Secret Page
+    v-btn(text to="/admin" v-if="isAuth") My Trivias
     v-btn(text to="/about") About
     v-btn(text to="/") Trivias
     v-btn(text to="/categories") Categories
@@ -137,7 +137,7 @@ export default {
           this.toHome();
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
   },

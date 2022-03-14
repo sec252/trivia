@@ -22,6 +22,7 @@ class CategoryCollection(Resource):
     def get(self):
         return CategoryService.get_categories()
 
+    @api.marshal_with(category, envelope="category")
     def post(self):
         payload = request.json
         return CategoryService.create_category(payload)
