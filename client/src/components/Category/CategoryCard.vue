@@ -18,10 +18,8 @@ v-card.mx-auto( )
     class="elevation-0"
     )
       template(v-slot:item.actions="{ item }")
-        v-icon(
-          small
-          class="mr-2"
-        ) mdi-play
+        v-btn(icon small color='primary')
+          v-icon mdi-play
     .text-center.pt-2
       v-pagination(
         circle
@@ -29,21 +27,12 @@ v-card.mx-auto( )
         :length="pageCount"
         :total-visible="7"
       )
-  v-card-actions
-    v-list-item.grow
-      v-row(align='center' justify='end')
-        v-icon.mr-1
-          | mdi-heart
-        span.subheading.mr-2 256
-        span.mr-1 &middot;
-        v-icon.mr-1
-          | mdi-share-variant
-        span.subheading 45
 
 </template>
 
 <script>
 import { TriviaAPI } from "../../services/trivia";
+
 export default {
   name: "CatergoryCard",
   props: {

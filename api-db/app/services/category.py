@@ -25,6 +25,11 @@ class CategoryService:
         name = payload["name"]
         if not name:
             raise BadRequest("Category pool needs a name")
+        category_exists = Category.query.filter(Category.name == name).first()
+
+        if category_exists:
+            raise BadRequest("Category already exists")
+
         else:
             category = Category(name=name)
             db.session.add(category)

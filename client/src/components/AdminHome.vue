@@ -29,12 +29,6 @@
               @click="editTriviaPool(trivia.id)").mr-2
                 | mdi-pencil
             span Edit Trivia Pool
-          v-tooltip(bottom)
-            template(v-slot:activator='{ on, attrs }')
-              v-icon(color='primary' dark v-bind='attrs' v-on='on'
-              @click="getTrivia(trivia.id)").mr-2
-                | mdi-clipboard-list-outline
-            span Get Trivia Details
       v-col(cols=6 v-if="authUser.role =='admin'").text-center: v-card
         h1.py-2 Users
         v-row(no-gutters v-for="user in users" :key="user.name").px-3
@@ -58,7 +52,6 @@
     UserDetailsDialog(:dialog="detailsDialog", :user="user" @cancel="detailsDialog=false")
     UserEditFormDialog(:dialog="editDialog", :user="user" @cancel="editDialog=false" @update="updateUser")
     TriviaEditFormDialog(:dialog="editTriviaDialog" :triviaPool="triviaPool" @cancel="editTriviaDialog=false", @updateTrivia="updateTriviaPool")
-    TriviaDetailDialog(:dialog="triviaDetailsDialog" :trivia="triviaPool" @cancel="triviaDetailsDialog=false")
 
 
 
@@ -69,14 +62,13 @@ import { UsersAPI } from "../services/users";
 import { TriviaAPI } from "../services/trivia";
 import { mapGetters } from "vuex";
 export default {
-  name: "HelloWorld",
+  name: "AdminHome",
   components: {
     TriviaCreatePool: () => import("./Trivia/TriviaCreatePool.vue"),
     UserCreateForm: () => import("./UserCreateForm.vue"),
     UserDetailsDialog: () => import("./UserDetailsDialog.vue"),
     UserEditFormDialog: () => import("./UserEditFormDialog.vue"),
     TriviaEditFormDialog: () => import("./Trivia/TriviaEditFormDialog.vue"),
-    TriviaDetailDialog: () => import("./Trivia/TriviaDetailDialog.vue"),
   },
   data: () => ({
     detailsDialog: false,
