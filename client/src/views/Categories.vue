@@ -29,27 +29,31 @@ v-container
       v-for="category in filteredCategories" 
       :key="category.id"
     )
-      CategoryCard(:category="category")
+      CategoryCard(:category="category" @new="newTrivia")
     CategoryCreateForm(:dialog="dialog" @cancel="dialog=false" @new="addCategory") 
-
+    CategoryTriviaCreate(:dialog="newTriviaDialog" :category="category" @cancel="newTriviaDialog = false" )
 </template>
 
 <script>
 import { CategoriesAPI } from "../services/category";
 import CategoryCard from "../components/Category/CategoryCard.vue";
 import CategoryCreateForm from "../components/Category/CategoryCreateForm.vue";
+import CategoryTriviaCreate from "../components/Category/CategoryTriviaCreate.vue";
 import { mapGetters } from "vuex";
 export default {
   name: "Categories",
   components: {
     CategoryCard,
     CategoryCreateForm,
+    CategoryTriviaCreate
   },
   data: () => ({
     dialog: false,
+    newTriviaDialog: false,
     categories: [],
     filteredCategories: [],
     select: null,
+    category: {}
   }),
   watch: {
     select: function handleSelect(val) {
@@ -87,6 +91,10 @@ export default {
       this.categories.push(category);
       this.filteredCategories = this.categories;
     },
+    newTrivia(catId){
+      this.category = this.categories.find(c => c.id ==catId)
+      this.newTriviaDialog = true;
+    }
   },
 };
 </script>

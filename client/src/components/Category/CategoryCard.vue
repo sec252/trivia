@@ -1,9 +1,24 @@
 <template lang="pug">
 v-card.mx-auto( )
-  v-card-title
-    v-icon( left)
-      | mdi-shape-plus
-    span.text-h5.font-weight-light {{category.name}}
+  v-toolbar(
+    :elevation="1"
+
+  ).mb-2 
+    v-icon.mr-3 mdi-shape-plus
+    v-toolbar-title {{category.name}}
+    v-spacer
+    v-tooltip(bottom)
+      template( v-slot:activator="{ on, attrs }")
+        v-btn(
+          fab 
+          x-small 
+          color="success" 
+          @click="$emit('new', category.id)" 
+          v-bind="attrs"
+          v-on="on"
+        )
+          v-icon mdi-plus
+      span Add New Trivia
   v-card-text.text-h5.font-weight-bold
     v-data-table(
     height=200

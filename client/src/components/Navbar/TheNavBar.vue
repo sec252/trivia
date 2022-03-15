@@ -102,7 +102,7 @@ export default {
       isAuth: "auth/isLoggedIn",
     }),
   },
-  beforeCreated() {
+  mounted() {
     if (localStorage.getItem("darkMode")) {
       this.darkMode = JSON.parse(localStorage.getItem("darkMode"));
       this.$vuetify.theme.dark = this.darkMode;

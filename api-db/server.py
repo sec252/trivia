@@ -43,7 +43,7 @@ def seed_db():
     )
     db.session.add(
         Trivia(
-            text="What is the game mode hat we play the most",
+            text="What is the game mode that we play the most",
             answer="Showdown",
             trivia_pool_id=1,
         )

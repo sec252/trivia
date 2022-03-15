@@ -49,7 +49,7 @@ export default {
         };
         const newCategory = (await CategoriesAPI.createCategory(data)).category;
         this.addNotification({
-          message: "Category succfully added",
+          message: "Category successfully added",
           type: "success",
         });
         this.$emit("new", newCategory);

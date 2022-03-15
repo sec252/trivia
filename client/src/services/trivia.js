@@ -44,7 +44,6 @@ export const TriviaAPI = {
     return res;
   },
   updateTriviaPlays: async (id, data) => {
-    console.log(data);
     const res = (await apiService.put(`/trivias/${id}/plays`, data)).data;
 
     return res.body;

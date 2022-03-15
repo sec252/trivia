@@ -5,7 +5,7 @@ div
       v-col(cols=8)
         v-card-title.text-h5 {{title}}
         v-card-subtitle
-          | Created at: {{date}}
+          | Created on: {{date}}
       v-col(cols=4).text-center
         .text-h5.mt-3 {{plays}}
         v-card-subtitle.pt-0
