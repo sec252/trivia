@@ -9,6 +9,7 @@ v-expand-transition
       v-row( no-gutters).mb-2
         v-btn(outlined color="white" @click="showAnswer").ml-2 Show answer
         v-spacer
+        v-btn(outlined color="white" @click="$emit('prev'); show=false;" v-if="number>0").mr-2 Previous
         v-btn(outlined color="white" @click="$emit('next'); show=false;").mr-2 Next
 
 </template>

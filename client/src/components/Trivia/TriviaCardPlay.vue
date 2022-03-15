@@ -22,6 +22,7 @@
             :total="trivia.questions.length"
             v-if="q.text == current"
             @next="updateNext"
+            @prev="updatePrev"
           )
         v-btn#end( 
           rounded 
@@ -76,6 +77,16 @@ export default {
     },
     updateNext() {
       this.next++;
+      this.current = this.questions[this.next];
+      if (this.next == this.questions.length) {
+        setTimeout(() => {
+          this.end = true;
+        }, 500);
+      }
+    },
+    updatePrev() {
+      if(this.next == 0) return
+      this.next--
       this.current = this.questions[this.next];
       if (this.next == this.questions.length) {
         setTimeout(() => {
