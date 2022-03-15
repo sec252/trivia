@@ -28,6 +28,7 @@ v-card
 <script>
 import { CategoriesAPI } from "../../services/category";
 import { TriviaAPI } from "../../services/trivia";
+import { mapActions } from "vuex";
 export default {
   name: "TriviaCreatePool",
 
@@ -40,15 +41,27 @@ export default {
     this.items = (await CategoriesAPI.getCategoryCollection()).categories;
   },
   methods: {
+    ...mapActions({
+      addNotification: "notifications/addNotification",
+    }),
     async createTrivia() {
-      const trivia = {
-        name: this.name,
-        category_id: this.select,
-      };
-      const newTrivia = (await TriviaAPI.createTrivia(trivia)).trivia;
-      this.name = "";
-      this.select = null;
-      this.$emit("new", newTrivia);
+      try {
+        const trivia = {
+          name: this.name,
+          category_id: this.select,
+        };
+        const newTrivia = (await TriviaAPI.createTrivia(trivia)).trivia;
+        this.name = "";
+        this.select = null;
+        this.$emit("new", newTrivia);
+      } catch (error) {
+        this.addNotification(
+          {
+            message: error.response?.data?.message,
+            type: "error"
+          }
+        )
+      }
     },
   },
 };

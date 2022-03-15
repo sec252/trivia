@@ -11,7 +11,7 @@ div
       template(v-slot:activator='{ on, attrs }')
         v-btn(icon v-bind='attrs' v-on='on')
           v-icon mdi-cog
-      v-list
+      v-list(:key="darkMode")
         v-list-item-group(
           v-model="selectedItem"
           color="primary"
@@ -26,7 +26,18 @@ div
               v-icon {{item.icon}}
             v-list-item-content
               v-list-item-title(
+                :key="item.title"
                 v-text='item.title'
+              )
+          v-list-item(
+            @click="toggleDarkMode"
+            v-if="showIfAuth(null)"
+          )
+            v-list-item-icon
+              v-icon mdi-theme-light-dark
+            v-list-item-content
+              v-list-item-title(
+                v-text='modeTitle'
               )
   AuthDialog(
     :dialog="dialog"
@@ -52,6 +63,7 @@ export default {
     selectedItem: 1,
     register: false,
     darkMode: false,
+    modeTitle: "Dark Mode",
     menu: [
       {
         icon: "mdi-account-plus",
@@ -77,21 +89,20 @@ export default {
         func: v.handleLogin,
         isAuth: true,
       },
-      {
-        icon: "mdi-theme-light-dark",
-        title: "Dark Mode",
-        func: v.toggleDarkMode,
-        isAuth: null,
-      },
     ],
   }),
+  watch:{
+    darkMode: function handleModeTitle(val){
+      val ? this.modeTitle = "Light Mode" : this.modeTitle = "Dark Mode"
+    }
+  },
   computed: {
     ...mapGetters({
       authUser: "auth/user",
       isAuth: "auth/isLoggedIn",
     }),
   },
-  created() {
+  beforeCreated() {
     if (localStorage.getItem("darkMode")) {
       this.darkMode = JSON.parse(localStorage.getItem("darkMode"));
       this.$vuetify.theme.dark = this.darkMode;
@@ -124,6 +135,7 @@ export default {
     },
     toggleDarkMode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      this.darkMode = this.$vuetify.theme.dark
       localStorage.setItem("darkMode", this.$vuetify.theme.dark);
     },
     handleRegister() {

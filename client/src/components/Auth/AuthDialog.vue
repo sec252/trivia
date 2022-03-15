@@ -10,6 +10,8 @@ v-dialog(
   )
     v-toolbar(
       :elevation="1"
+      color="primary"
+      dark
     ).mb-2 
       v-icon.mr-3 {{icon}}
       v-toolbar-title {{title}}

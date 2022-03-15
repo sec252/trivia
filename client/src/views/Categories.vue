@@ -5,7 +5,12 @@ v-container
       v-row
         h1.mt-5.ml-3 Categories
         v-spacer
-        v-btn.mt-6.mr-3(tile color='success' @click="dialog=true")
+        v-btn.mt-6.mr-3(
+          tile 
+          color='success' 
+          @click="dialog=true"
+          v-if="hasAccess"
+        )
           v-icon(left)
             | mdi-plus
           | New Category
@@ -32,12 +37,13 @@ v-container
 <script>
 import { CategoriesAPI } from "../services/category";
 import CategoryCard from "../components/Category/CategoryCard.vue";
-import CategoryCreateForm from "../components/Category/CategoryCreateForm.vue"
+import CategoryCreateForm from "../components/Category/CategoryCreateForm.vue";
+import { mapGetters } from "vuex";
 export default {
   name: "Categories",
   components: {
     CategoryCard,
-    CategoryCreateForm
+    CategoryCreateForm,
   },
   data: () => ({
     dialog: false,
@@ -56,6 +62,17 @@ export default {
       }
     },
   },
+  computed: {
+    ...mapGetters({
+      authUser: "auth/user",
+    }),
+    hasAccess(){
+      if(this.authUser && this.authUser.role == "admin"){
+        return true
+      }
+      return false
+    }
+  },
   async created() {
     this.getCategories();
   },
@@ -66,10 +83,10 @@ export default {
       ).categories;
       this.filteredCategories = this.categories;
     },
-    addCategory(category){
-      this.categories.push(category)
-      this.filteredCategories = this.categories
-    }
+    addCategory(category) {
+      this.categories.push(category);
+      this.filteredCategories = this.categories;
+    },
   },
 };
 </script>
