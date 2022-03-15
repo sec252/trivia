@@ -122,8 +122,11 @@ export default {
             }
         }
         
-
-      this.$emit("cancel");
+      this.name =  "";
+      this.newQuestion = "";
+      this.newAnswer = "";
+      this.questions = [];
+      this.$emit("reload");
     },
   },
 };

@@ -27,11 +27,11 @@ v-container
       cols=12 
       md=6 
       v-for="category in filteredCategories" 
-      :key="category.id"
+      :key="category.id + rerender"
     )
       CategoryCard(:category="category" @new="newTrivia")
-    CategoryCreateForm(:dialog="dialog" @cancel="dialog=false" @new="addCategory") 
-    CategoryTriviaCreate(:dialog="newTriviaDialog" :category="category" @cancel="newTriviaDialog = false" )
+    CategoryCreateForm(:dialog="dialog" :key="dialog" @cancel="dialog=false" @new="addCategory") 
+    CategoryTriviaCreate(:dialog="newTriviaDialog" :category="category" @cancel="newTriviaDialog = false" @reload="newTriviaDialog=false; rerender++;" )
 </template>
 
 <script>
@@ -51,6 +51,7 @@ export default {
     dialog: false,
     newTriviaDialog: false,
     categories: [],
+    rerender: 1,
     filteredCategories: [],
     select: null,
     category: {}

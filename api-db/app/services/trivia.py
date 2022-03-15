@@ -1,4 +1,3 @@
-from unicodedata import category
 from werkzeug.exceptions import BadRequest
 from flask import request
 from app.models.users import User, Role
@@ -73,6 +72,9 @@ class TriviaService:
 
     def delete_trivia(id):
         trivia = TriviaService.get_trivia_pool_by_id(id)
+        Trivia.query.filter(Trivia.trivia_pool_id == trivia.id).delete(
+            synchronize_session=False
+        )
         db.session.delete(trivia)
         db.session.commit()
         return None

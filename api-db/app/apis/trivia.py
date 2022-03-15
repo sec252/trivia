@@ -45,6 +45,18 @@ trivia_pools = api.model(
     },
 )
 
+pagination_model = api.model(
+    "Pagination",
+    {
+        "has_prev": fields.Boolean,
+        "has_next": fields.Boolean,
+        "page": fields.Integer,
+        "total_pages": fields.Integer(attribute="pages"),
+        "items_per_page": fields.Integer(attribute="per_page"),
+        "total_items": fields.Integer(attribute="total"),
+        "items": fields.List(fields.Nested(trivia_pools)),
+    },
+)
 trivia = api.model(
     "Trivia",
     {
