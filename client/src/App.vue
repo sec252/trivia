@@ -1,7 +1,6 @@
 <template lang="pug">
   v-app
-    template(v-for="notification in notifications")
-      Notification(:notification="notification")
+    NotificationList
     TheNavBar
     v-main
       router-view
@@ -9,12 +8,12 @@
 </template>
 
 <script>
-import { mapActions,mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "App",
   components: {
     TheNavBar: () => import("./components/Navbar/TheNavBar.vue"),
-    Notification: () => import("./components/Notifications/Notification.vue"),
+    NotificationList: () => import("./components/Notifications/NotificationList.vue"),
   },
   data: () => ({
     //
@@ -22,7 +21,6 @@ export default {
 
   computed: {
     ...mapGetters({
-      notifications: "notifications/notifications",
       isAuth: "auth/isLoggedIn",
     }),
   },

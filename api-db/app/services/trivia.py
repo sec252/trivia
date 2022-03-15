@@ -46,6 +46,11 @@ class TriviaService:
         category_id = payload["category_id"]
         if not name:
             raise BadRequest("Trivia pool needs a name")
+        if not category_id:
+            raise BadRequest("Trivia pool needs a category")
+        trivia_exists = TriviaPool.query.filter(TriviaPool.name == name).first()
+        if trivia_exists:
+            raise BadRequest(f"Trivia name: '{name}' already taken")
         else:
             trivia = TriviaPool(
                 name=name, category_id=category_id, creator_id=current_user.id

@@ -30,7 +30,7 @@
             v-btn(
               large 
               :disabled='!valid' 
-              color='success' 
+              color='primary' 
               @click='validate'
             )  {{submitButton}}
 
@@ -73,6 +73,7 @@ export default {
     ...mapActions({
       loginUser: "auth/loginUser",
       registerUser: "auth/registerUser",
+      addNotification: "notifications/addNotification",
     }),
     async validate() {
       if (this.$refs.loginForm.validate()) {

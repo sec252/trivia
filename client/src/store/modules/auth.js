@@ -1,6 +1,5 @@
 import { authService } from "@/api";
 import authHeader from "@/services/auth-header";
-
 const namespaced = true;
 
 const state = {

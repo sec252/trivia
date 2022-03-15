@@ -12,9 +12,8 @@ const actions = {
   async addNotification({ commit }, notification) {
     commit("addNotification", notification);
     setTimeout(() => {
-        commit("removeNotification", notification.message);
-      }, 5000);
-
+      commit("removeNotification", notification.message);
+    }, 5000);
   },
 };
 
@@ -24,8 +23,8 @@ const mutations = {
   },
   removeNotification(state, message) {
     state.notifications = state.notifications.filter(
-        n => n.message != message 
-    )
+      (n) => n.message != message
+    );
   },
 };
 

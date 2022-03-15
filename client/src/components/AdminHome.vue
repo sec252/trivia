@@ -4,7 +4,7 @@
       v-col(cols=6)
         TriviaCreatePool(@new="addTrivia")
       v-col(cols=6)
-        v-card
+        v-card()
           v-card-title.text-h5 Username: 
             strong.ml-2 {{authUser.username}}
           v-card-text.pt-4
@@ -16,7 +16,7 @@
             v-spacer
             v-btn(text)
               | Role: {{authUser.role}}
-      v-col(:cols="authUser.role =='admin' ? 6 : 12").text-center: v-card
+      v-col(:cols="authUser.role =='admin' ? 6 : 12").text-center: v-card(flat)
         h1.py-2 Trivia Pools
         v-row( no-gutters v-for="trivia in triviaPools" :key="trivia.name").px-3
           p {{trivia.id}}) {{trivia.name}} - ({{trivia.category}})
@@ -29,7 +29,7 @@
               @click="editTriviaPool(trivia.id)").mr-2
                 | mdi-pencil
             span Edit Trivia Pool
-      v-col(cols=6 v-if="authUser.role =='admin'").text-center: v-card
+      v-col(cols=6 v-if="authUser.role =='admin'").text-center: v-card(flat)
         h1.py-2 Users
         v-row(no-gutters v-for="user in users" :key="user.name").px-3
           p {{user.id}}) {{user.username}}
