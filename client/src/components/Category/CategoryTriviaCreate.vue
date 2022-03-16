@@ -80,17 +80,17 @@ export default {
     },
   },
   data: () => ({
-      name: "",
-      newQuestion: "",
-      newAnswer: "",
-      questions:[]
+    name: "",
+    newQuestion: "",
+    newAnswer: "",
+    questions: [],
   }),
   computed: {
     title() {
-      return this.category.name
+      return this.category.name;
     },
     icon() {
-      return "mdi-shapes"
+      return "mdi-shapes";
     },
   },
   methods: {
@@ -100,29 +100,27 @@ export default {
         answer: this.newAnswer,
       };
 
-      this.questions.push(data)
+      this.questions.push(data);
       this.newQuestion = "";
       this.newAnswer = "";
     },
     async deleteQuestion(text) {
-      this.questions = this.questions.filter(
-        (q) => q.text !== text
-      );
+      this.questions = this.questions.filter((q) => q.text !== text);
     },
     async save() {
-        const trivia = {
-          name: this.name,
-          category_id: this.category.id,
-        };
-        const newTrivia = (await TriviaAPI.createTrivia(trivia)).trivia;
+      const trivia = {
+        name: this.name,
+        category_id: this.category.id,
+      };
+      const newTrivia = (await TriviaAPI.createTrivia(trivia)).trivia;
 
-        if(newTrivia) {
-            for (let q of this.questions) {
-                await TriviaAPI.createTriviaPoolQuestions(newTrivia.id, q)
-            }
+      if (newTrivia) {
+        for (let q of this.questions) {
+          await TriviaAPI.createTriviaPoolQuestions(newTrivia.id, q);
         }
-        
-      this.name =  "";
+      }
+
+      this.name = "";
       this.newQuestion = "";
       this.newAnswer = "";
       this.questions = [];

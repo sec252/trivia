@@ -55,12 +55,10 @@ export default {
         this.select = null;
         this.$emit("new", newTrivia);
       } catch (error) {
-        this.addNotification(
-          {
-            message: error.response?.data?.message,
-            type: "error"
-          }
-        )
+        this.addNotification({
+          message: error.response?.data?.message,
+          type: "error",
+        });
       }
     },
   },

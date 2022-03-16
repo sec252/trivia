@@ -19,7 +19,25 @@ class TriviaService:
         return trivia_pool
 
     def get_trivia_pools():
-        trivia_pools = TriviaPool.query.all()
+        query = TriviaPool.query
+        args = request.args
+        page = args.get("page", default=None, type=int)
+        per_page = args.get("perPage", default=None, type=int)
+        order = args.get("order", default="most", type=str)
+        if order == "most":
+            query = query.order_by(TriviaPool.plays.desc())
+        elif order == "least":
+            query = query.order_by(TriviaPool.plays.asc())
+        elif order == "asc":
+            query = query.order_by(TriviaPool.name.desc())
+        elif order == "desc":
+            query = query.order_by(TriviaPool.name.asc())
+        elif order == "newest":
+            query = query.order_by(TriviaPool.created_date.desc())
+        else:
+            query = query.order_by(TriviaPool.created_date.asc())
+        trivia_pools = query.paginate(page=page, per_page=per_page)
+
         return trivia_pools
 
     def get_category_trivia_pools(id):
@@ -52,7 +70,7 @@ class TriviaService:
             raise BadRequest(f"Trivia name: '{name}' already taken")
         else:
             trivia = TriviaPool(
-                name=name, category_id=category_id, creator_id=current_user.id
+                name=name.lower(), category_id=category_id, creator_id=current_user.id
             )
             db.session.add(trivia)
             db.session.commit()

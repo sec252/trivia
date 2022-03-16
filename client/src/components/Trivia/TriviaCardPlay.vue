@@ -85,8 +85,8 @@ export default {
       }
     },
     updatePrev() {
-      if(this.next == 0) return
-      this.next--
+      if (this.next == 0) return;
+      this.next--;
       this.current = this.questions[this.next];
       if (this.next == this.questions.length) {
         setTimeout(() => {
