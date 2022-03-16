@@ -1,8 +1,12 @@
 import { apiService } from "@/api";
 import authHeader from "@/services/auth-header";
 export const TriviaAPI = {
-  getTriviaCollection: async () => {
-    const res = (await apiService.get("/trivias/")).data;
+  getTriviaCollection: async (page = 1, perPage = 5, order = "most") => {
+    const res = (
+      await apiService.get(
+        `/trivias/?page=${page}&perPage=${perPage}&order=${order}`
+      )
+    ).data;
     return res;
   },
   getTriviaCategoryCollection: async (id) => {

@@ -6,7 +6,7 @@
         :title="trivia.name", 
         :timestamp="trivia.createdDate", 
         :plays="trivia.plays" 
-        :author="trivia.author.username"
+        :author="trivia.author.username ? trivia.author.username : 'unkown'"
         @play="playTrivia"
       )
     TriviaCardPlay(

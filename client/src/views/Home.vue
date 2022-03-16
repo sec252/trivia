@@ -10,6 +10,8 @@
           @input="handleSearch"
           v-model="search"
         )
+    FilterBtn(@order="orderBy")
+
     TriviaList(:trivias="filteredSearch")
 </template>
 
@@ -19,19 +21,54 @@ export default {
   name: "Home",
   components: {
     TriviaList: () => import("../components/Trivia/TriviaList.vue"),
+    FilterBtn: () => import("../components/Filter/FilterBtn.vue"),
   },
   data: () => ({
     triviaPools: [],
     filteredSearch: [],
     search: "",
+    page: 1,
+    perPage: 10,
+    order: "most",
   }),
-  created() {
+  beforeMount() {
     this.getTrivias();
+  },
+  mounted() {
+    this.getNextTrivia();
   },
   methods: {
     async getTrivias() {
-      this.triviaPools = (await TriviaAPI.getTriviaCollection()).body;
+      this.triviaPools = (
+        await TriviaAPI.getTriviaCollection(this.page, this.perPage, this.order)
+      ).items;
       this.filteredSearch = this.triviaPools;
+    },
+    async getNextTrivia() {
+      window.onscroll = async () => {
+        let bottomOfWindow =
+          document.documentElement.scrollTop + window.innerHeight ===
+          document.documentElement.offsetHeight;
+        if (bottomOfWindow) {
+          this.page++;
+          const res = (
+            await TriviaAPI.getTriviaCollection(
+              this.page,
+              this.perPage,
+              this.order
+            )
+          ).items;
+          this.triviaPools = [...this.triviaPools, ...res];
+          this.filteredSearch = this.triviaPools;
+        }
+      };
+    },
+    orderBy(order) {
+      this.triviaPools = [];
+      this.page = 1;
+      this.perPage = 10;
+      this.order = order;
+      this.getTrivias();
     },
     handleSearch(val) {
       let temp = this.triviaPools;

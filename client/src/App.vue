@@ -2,7 +2,7 @@
   v-app
     NotificationList
     TheNavBar
-    v-main
+    v-main.mt-10
       router-view
 
 </template>
@@ -13,7 +13,8 @@ export default {
   name: "App",
   components: {
     TheNavBar: () => import("./components/Navbar/TheNavBar.vue"),
-    NotificationList: () => import("./components/Notifications/NotificationList.vue"),
+    NotificationList: () =>
+      import("./components/Notifications/NotificationList.vue"),
   },
   data: () => ({
     //

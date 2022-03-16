@@ -45,7 +45,7 @@ export default {
   components: {
     CategoryCard,
     CategoryCreateForm,
-    CategoryTriviaCreate
+    CategoryTriviaCreate,
   },
   data: () => ({
     dialog: false,
@@ -54,7 +54,7 @@ export default {
     rerender: 1,
     filteredCategories: [],
     select: null,
-    category: {}
+    category: {},
   }),
   watch: {
     select: function handleSelect(val) {
@@ -71,12 +71,12 @@ export default {
     ...mapGetters({
       authUser: "auth/user",
     }),
-    hasAccess(){
-      if(this.authUser && this.authUser.role == "admin"){
-        return true
+    hasAccess() {
+      if (this.authUser && this.authUser.role == "admin") {
+        return true;
       }
-      return false
-    }
+      return false;
+    },
   },
   async created() {
     this.getCategories();
@@ -92,10 +92,10 @@ export default {
       this.categories.push(category);
       this.filteredCategories = this.categories;
     },
-    newTrivia(catId){
-      this.category = this.categories.find(c => c.id ==catId)
+    newTrivia(catId) {
+      this.category = this.categories.find((c) => c.id == catId);
       this.newTriviaDialog = true;
-    }
+    },
   },
 };
 </script>

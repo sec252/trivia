@@ -45,7 +45,7 @@ trivia_pools = api.model(
     },
 )
 
-pagination_model = api.model(
+paginate_trivia_pools = api.model(
     "Pagination",
     {
         "has_prev": fields.Boolean,
@@ -73,7 +73,7 @@ trivia = api.model(
 
 @api.route("/")
 class TriviaPoolCollection(Resource):
-    @api.marshal_with(trivia_pools, envelope="body")
+    @api.marshal_with(paginate_trivia_pools)
     def get(self):
         return TriviaService.get_trivia_pools()
 
