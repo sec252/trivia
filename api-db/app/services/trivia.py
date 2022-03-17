@@ -24,6 +24,7 @@ class TriviaService:
         page = args.get("page", default=None, type=int)
         per_page = args.get("perPage", default=None, type=int)
         order = args.get("order", default="most", type=str)
+        search = args.get("search", default=None)
         if order == "most":
             query = query.order_by(TriviaPool.plays.desc())
         elif order == "least":
@@ -36,6 +37,8 @@ class TriviaService:
             query = query.order_by(TriviaPool.created_date.desc())
         else:
             query = query.order_by(TriviaPool.created_date.asc())
+        if search:
+            query = query.filter(TriviaPool.name.ilike(f"%{search}%"))
         trivia_pools = query.paginate(page=page, per_page=per_page)
 
         return trivia_pools
@@ -70,7 +73,9 @@ class TriviaService:
             raise BadRequest(f"Trivia name: '{name}' already taken")
         else:
             trivia = TriviaPool(
-                name=name.lower(), category_id=category_id, creator_id=current_user.id
+                name=name.lower().title(),
+                category_id=category_id,
+                creator_id=current_user.id,
             )
             db.session.add(trivia)
             db.session.commit()
@@ -83,7 +88,7 @@ class TriviaService:
         if not name:
             raise BadRequest("Trivia pool needs a name")
 
-        trivia_pool.name = name
+        trivia_pool.name = name.lower()
 
         db.session.commit()
         return trivia_pool

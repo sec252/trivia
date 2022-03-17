@@ -14,10 +14,8 @@ class TriviaPool(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
-    def __init__(self, name, category_id, creator_id):
-        self.name = name
-        self.category_id = category_id
-        self.creator_id = creator_id
+    def __repr__(self):
+        return f"TriviaPool({self.name})"
 
     @property
     def questions(self):
@@ -39,7 +37,7 @@ class Trivia(db.Model):
     __tablename__ = "trivia"
 
     id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(128), unique=True, nullable=False)
+    text = db.Column(db.String(128), nullable=False)
     answer = db.Column(db.String(128), nullable=False)
     trivia_pool_id = db.Column(
         db.Integer, db.ForeignKey("trivia_pool.id"), nullable=False

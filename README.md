@@ -45,7 +45,10 @@ this will make entrypoint.sh executable
 
 ### Seed database
 
-open up another terminal and run:
-`docker exec trivia_api_1 python server.py seed_db`
+open up another terminal from root and run:
+
+`./seed.sh`
+
+** Note: You might have to `chmod +x seed.sh`
 
 
