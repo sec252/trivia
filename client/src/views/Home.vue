@@ -7,7 +7,6 @@
         v-text-field(
           label="Search Trivia Pools"
           prepend-icon="mdi-magnify"
-          @input="handleSearch"
           v-model="search"
         )
     FilterBtn(@order="orderBy")
@@ -31,6 +30,12 @@ export default {
     perPage: 10,
     order: "most",
   }),
+  watch:{
+    search: function handleSearch(val){
+      this.search = val
+      this.getTrivias()
+    }
+  },
   beforeMount() {
     this.getTrivias();
   },
@@ -40,7 +45,7 @@ export default {
   methods: {
     async getTrivias() {
       this.triviaPools = (
-        await TriviaAPI.getTriviaCollection(this.page, this.perPage, this.order)
+        await TriviaAPI.getTriviaCollection(this.search, this.page, this.perPage, this.order)
       ).items;
       this.filteredSearch = this.triviaPools;
     },
@@ -53,6 +58,7 @@ export default {
           this.page++;
           const res = (
             await TriviaAPI.getTriviaCollection(
+              this.search,
               this.page,
               this.perPage,
               this.order
@@ -69,12 +75,6 @@ export default {
       this.perPage = 10;
       this.order = order;
       this.getTrivias();
-    },
-    handleSearch(val) {
-      let temp = this.triviaPools;
-      if (val !== "") temp = temp.filter((t) => t.name.includes(val));
-      this.filteredSearch = temp;
-      if (val == "") return;
     },
   },
 };
