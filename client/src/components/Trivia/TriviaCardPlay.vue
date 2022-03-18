@@ -65,6 +65,7 @@ export default {
   methods: {
     async getTrivia(id) {
       const res = (await TriviaAPI.getTriviaItem(id)).trivia;
+      console.log(res);
       this.trivia = res;
     },
     startTrivia() {
