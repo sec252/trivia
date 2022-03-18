@@ -29,7 +29,7 @@ export default {
     page: 1,
     perPage: 10,
     order: "most",
-    category: ""
+    category: "",
   }),
   watch: {
     search: function handleSearch(val) {
@@ -39,7 +39,7 @@ export default {
   },
   beforeMount() {
     this.getTrivias();
-    this.category = this.capitalize(this.$route.params.slug)
+    this.category = this.capitalize(this.$route.params.slug);
   },
   mounted() {
     this.getNextTrivia();
@@ -85,15 +85,15 @@ export default {
       this.order = order;
       this.getTrivias();
     },
-    capitalize(slug){
-        const words = slug.split(" ");
+    capitalize(slug) {
+      const words = slug.split(" ");
 
-        for (let i = 0; i < words.length; i++) {
-            words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-        }
+      for (let i = 0; i < words.length; i++) {
+        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+      }
 
-        return words.join(" ");
-    }
+      return words.join(" ");
+    },
   },
 };
 </script>

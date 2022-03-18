@@ -2,11 +2,7 @@
   v-row(dense no-gutters)
     v-col(v-for="trivia in trivias" cols=12 md=6 :key="trivia.id").pa-2
       TriviaCard(
-        :id="trivia.id" 
-        :title="trivia.name", 
-        :timestamp="trivia.createdDate", 
-        :plays="trivia.plays" 
-        :author="trivia.author.username ? trivia.author.username : 'unkown'"
+        :trivia="trivia"
         @play="playTrivia"
       )
     TriviaCardPlay(

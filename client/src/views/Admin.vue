@@ -6,7 +6,7 @@
 export default {
   name: "Admin",
   components: {
-    AdminHome: () => import("../components/AdminHome.vue"),
+    AdminHome: () => import("../components/Admin/AdminHome.vue"),
   },
 };
 </script>

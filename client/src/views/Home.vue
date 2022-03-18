@@ -29,7 +29,7 @@ export default {
     page: 1,
     perPage: 10,
     order: "most",
-    slug: ""
+    slug: "",
   }),
   watch: {
     search: function handleSearch(val) {
