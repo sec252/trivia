@@ -66,6 +66,7 @@ export default {
           this.page++;
           const res = (
             await TriviaAPI.getTriviaCollection(
+              this.$route.params.slug,
               this.search,
               this.page,
               this.perPage,
