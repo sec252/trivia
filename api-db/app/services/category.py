@@ -23,6 +23,8 @@ class CategoryService:
 
     def create_category(payload):
         name = payload["name"]
+        img_url = payload["imgUrl"]
+
         if not name:
             raise BadRequest("Category pool needs a name")
         category_exists = Category.query.filter(Category.name == name).first()
@@ -31,7 +33,7 @@ class CategoryService:
             raise BadRequest("Category already exists")
 
         else:
-            category = Category(name=name)
+            category = Category(name=name, img_url=img_url)
             db.session.add(category)
             db.session.commit()
             return category

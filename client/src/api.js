@@ -7,4 +7,8 @@ const authService = axios.create({
 const apiService = axios.create({
   baseURL: process.env.VUE_APP_URL,
 });
-export { authService, apiService };
+
+const unsplashService = axios.create({
+  baseURL: process.env.VUE_APP_UNSPLASH_URL,
+});
+export { authService, apiService, unsplashService };

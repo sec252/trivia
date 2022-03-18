@@ -46,7 +46,12 @@ def seed_db():
     user_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     for c in categories:
-        db.session.add(Category(name=c))
+        db.session.add(
+            Category(
+                name=c,
+                img_url="https://s3.us-west-2.amazonaws.com/images.unsplash.com/small/photo-1578070181910-f1e514afdd08",
+            )
+        )
 
     db.session.commit()
 

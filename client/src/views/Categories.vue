@@ -25,7 +25,9 @@ v-container
       )
     v-col(
       cols=12 
-      md=6 
+      sm=6
+      md=4
+      lg=3 
       v-for="category in filteredCategories" 
       :key="category.id + rerender"
     )

@@ -27,6 +27,7 @@
 
 <script>
 import { CategoriesAPI } from "../../services/category";
+import { UnsplashAPI } from "../../services/unsplash";
 import { mapActions } from "vuex";
 export default {
   name: "CategoryCreateForm.vue",
@@ -44,8 +45,11 @@ export default {
     }),
     async save() {
       try {
+        let photo = await UnsplashAPI.getPhoto(this.category);
+        console.log(photo);
         const data = {
           name: this.category,
+          imgUrl: photo,
         };
         const newCategory = (await CategoriesAPI.createCategory(data)).category;
         this.addNotification({

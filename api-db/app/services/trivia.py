@@ -1,7 +1,9 @@
+from unicodedata import category
 from werkzeug.exceptions import BadRequest
 from flask import request
 from app.models.users import User, Role
 from app.models.trivia import Trivia, TriviaPool
+from app.models.category import Category
 from app import db
 from flask_jwt_extended import (
     current_user,
@@ -19,8 +21,14 @@ class TriviaService:
         return trivia_pool
 
     def get_trivia_pools():
-        query = TriviaPool.query
         args = request.args
+        slug = args.get("slug", default=None, type=str)
+        query = TriviaPool.query
+        if slug:
+            category = Category.query.filter(Category.slug == slug).first()
+            if not category:
+                raise BadRequest("Category does not exist")
+            query = query.filter(TriviaPool.category_id == category.id)
         page = args.get("page", default=None, type=int)
         per_page = args.get("perPage", default=None, type=int)
         order = args.get("order", default="most", type=str)
@@ -30,9 +38,35 @@ class TriviaService:
         elif order == "least":
             query = query.order_by(TriviaPool.plays.asc())
         elif order == "asc":
-            query = query.order_by(TriviaPool.name.desc())
-        elif order == "desc":
             query = query.order_by(TriviaPool.name.asc())
+        elif order == "desc":
+            query = query.order_by(TriviaPool.name.desc())
+        elif order == "newest":
+            query = query.order_by(TriviaPool.created_date.desc())
+        else:
+            query = query.order_by(TriviaPool.created_date.asc())
+        if search:
+            query = query.filter(TriviaPool.name.ilike(f"%{search}%"))
+        trivia_pools = query.paginate(page=page, per_page=per_page)
+
+        return trivia_pools
+
+    def get_trivia_pools_by_slug():
+        args = request.args
+        query = TriviaPool.query.filter(TriviaPool.category_id == category.id).all()
+
+        page = args.get("page", default=None, type=int)
+        per_page = args.get("perPage", default=None, type=int)
+        order = args.get("order", default="most", type=str)
+        search = args.get("search", default=None)
+        if order == "most":
+            query = query.order_by(TriviaPool.plays.desc())
+        elif order == "least":
+            query = query.order_by(TriviaPool.plays.asc())
+        elif order == "asc":
+            query = query.order_by(TriviaPool.name.asc())
+        elif order == "desc":
+            query = query.order_by(TriviaPool.name.desc())
         elif order == "newest":
             query = query.order_by(TriviaPool.created_date.desc())
         else:
