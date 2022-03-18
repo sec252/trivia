@@ -2,7 +2,7 @@
   v-container
     v-row
       v-col(cols=12 md=6)
-        h1.mt-3 All Trivias
+        h1.mt-3 {{category}} Trivia
       v-col(cols=12 md=6)
         v-text-field(
           label="Search Trivia Pools"
@@ -17,7 +17,7 @@
 <script>
 import { TriviaAPI } from "../services/trivia";
 export default {
-  name: "Home",
+  name: "Category",
   components: {
     TriviaList: () => import("../components/Trivia/TriviaList.vue"),
     FilterBtn: () => import("../components/Filter/FilterBtn.vue"),
@@ -29,7 +29,7 @@ export default {
     page: 1,
     perPage: 10,
     order: "most",
-    slug: ""
+    category: ""
   }),
   watch: {
     search: function handleSearch(val) {
@@ -39,6 +39,7 @@ export default {
   },
   beforeMount() {
     this.getTrivias();
+    this.category = this.capitalize(this.$route.params.slug)
   },
   mounted() {
     this.getNextTrivia();
@@ -47,7 +48,7 @@ export default {
     async getTrivias() {
       this.triviaPools = (
         await TriviaAPI.getTriviaCollection(
-          this.slug,
+          this.$route.params.slug,
           this.search,
           this.page,
           this.perPage,
@@ -83,6 +84,15 @@ export default {
       this.order = order;
       this.getTrivias();
     },
+    capitalize(slug){
+        const words = slug.split(" ");
+
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+        }
+
+        return words.join(" ");
+    }
   },
 };
 </script>

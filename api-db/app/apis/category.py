@@ -9,6 +9,8 @@ category = api.model(
     {
         "id": fields.Integer,
         "name": fields.String,
+        "img_url": fields.String,
+        "slug": fields.String,
     },
 )
 
