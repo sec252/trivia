@@ -14,7 +14,7 @@ div
       v-list(:key="darkMode")
         v-list-item-group(
           v-model="selectedItem"
-          color="primary"
+          color="default"
         )
           v-list-item(
             v-for='(item, i) in menu' 

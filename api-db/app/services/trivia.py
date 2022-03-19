@@ -2,7 +2,7 @@ from unicodedata import category
 from werkzeug.exceptions import BadRequest
 from flask import request
 from app.models.users import User, Role
-from app.models.trivia import Trivia, TriviaPool
+from app.models.trivia import Trivia, TriviaPool, TriviaUserPlays, TriviaIPPlay
 from app.models.category import Category
 from app import db
 from flask_jwt_extended import (
@@ -122,11 +122,12 @@ class TriviaService:
         if not name:
             raise BadRequest("Trivia pool needs a name")
 
-        trivia_pool.name = name.lower()
+        trivia_pool.name = name.lower().title()
 
         db.session.commit()
         return trivia_pool
 
+    @jwt_required()
     def delete_trivia(id):
         trivia = TriviaService.get_trivia_pool_by_id(id)
         Trivia.query.filter(Trivia.trivia_pool_id == trivia.id).delete(
@@ -143,6 +144,7 @@ class TriviaService:
             raise BadRequest("Question does not exist")
         return question
 
+    @jwt_required()
     def create_question(id, payload):
 
         text = payload["text"]
@@ -159,22 +161,39 @@ class TriviaService:
             db.session.commit()
             return new_question
 
+    @jwt_required()
     def delete_question(id):
         question = TriviaService.get_question_by_id(id)
         db.session.delete(question)
         db.session.commit()
         return None
 
-    # TODO need to update triva plays so that users
-    # that played this trivia should not be able to update
-    # the play again. Also need to start saving ip addresses
-    # and doing the same. They cannot update the same trivia plays
-    # again.
+    @jwt_required(optional=True)
     def update_play_by_id(id, payload):
         trivia = TriviaService.get_trivia_pool_by_id(id)
         user_id = payload["userId"]
         user = User.query.get(user_id)
-        print(user)
+        if user and user.id == current_user.id:
+            user_plays = TriviaUserPlays.query.filter(
+                TriviaUserPlays.trivia_id == trivia.id,
+                TriviaUserPlays.user_id == user.id,
+            ).first()
+            if user_plays:
+                user_plays.plays = user_plays.plays + 1
+            else:
+                db.session.add(
+                    TriviaUserPlays(trivia_id=trivia.id, user_id=user.id, plays=1)
+                )
+        elif not current_user:
+            ip = request.remote_addr
+            ip_plays = TriviaIPPlay.query.filter(
+                TriviaIPPlay.trivia_id == trivia.id, TriviaIPPlay.ip == ip
+            ).first()
+            if ip_plays:
+                ip_plays.plays = ip_plays.plays + 1
+            else:
+                db.session.add(TriviaIPPlay(trivia_id=trivia.id, ip=ip, plays=1))
+
         trivia.plays = trivia.plays + 1
         db.session.commit()
         return trivia

@@ -4,6 +4,7 @@ v-card
     v-text-field(
       v-model="name",
       label="Trivia Name",
+      color="default"
       required
     )
     v-autocomplete(
@@ -11,6 +12,7 @@ v-card
       :items="items",
       item-text="name"
       item-value="id"
+      color="default"
       label="Catagories",
       required
     )

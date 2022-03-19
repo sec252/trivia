@@ -5,12 +5,12 @@
       v-card-title.text-h5
         | {{triviaPool.name}}
       v-card-text
-        v-text-field(v-model="triviaPool.name", label="Name").mt-2
+        v-text-field(color="default" v-model="triviaPool.name", label="Name").mt-2
         v-row(no-gutters)
           v-col(cols=12)
-            v-text-field(v-model="newQuestion", label="Enter Question").mt-2
+            v-text-field(color="default" v-model="newQuestion", label="Enter Question").mt-2
           v-col(cols=12, md=10)
-            v-text-field(v-model="newAnswer", label="Enter Answer").mt-2
+            v-text-field(color="default" v-model="newAnswer", label="Enter Answer").mt-2
           v-col(cols=12, md=2)
             v-tooltip(bottom).mt-2
               template(v-slot:activator='{ on, attrs }')

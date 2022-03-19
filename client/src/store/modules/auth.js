@@ -14,13 +14,9 @@ const getters = {
 
 const actions = {
   async registerUser({ dispatch }, user) {
-    try {
-      const res = (await authService.post("/register", user)).data;
-      localStorage.setItem("accessToken", JSON.stringify(res.access_token));
-      await dispatch("fetchUser");
-    } catch (error) {
-      console.log(error);
-    }
+    const res = (await authService.post("/register", user)).data;
+    localStorage.setItem("accessToken", JSON.stringify(res.access_token));
+    await dispatch("fetchUser");
   },
   async loginUser({ dispatch, commit }, user) {
     try {

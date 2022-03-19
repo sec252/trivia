@@ -1,5 +1,5 @@
 <template lang="pug">
-v-col(:cols="authUser.role =='admin' ? 6 : 12").text-center: v-card(flat)
+v-col(:cols="authUser.role =='admin' ? 8 : 12").text-center: v-card(flat)
         v-row(no-gutters).px-2
             h2.py-2 Trivia Pools
             v-spacer
@@ -10,6 +10,7 @@ v-col(:cols="authUser.role =='admin' ? 6 : 12").text-center: v-card(flat)
             :items="triviaPools"
             height="300"
             hide-default-footer
+            disable-pagination
             
         )
             template(v-slot:item.actions='{ item }')
