@@ -4,14 +4,14 @@
       v-row
         v-col(cols='12')
           v-text-field(
-            v-model='username' 
+            color="default" v-model='username' 
             :rules="[rules.required, rules.min, rules.username]" 
             label='Username' 
             required
           )
         v-col(cols='12')
           v-text-field(
-            v-model='password' 
+            color="default" v-model='password' 
             :append-icon="show1?'eye':'eye-off'" :rules='[rules.required, rules.min]' :type="show1 ? 'text' : 'password'" 
             label='Password' 
             hint='At least 4 characters' 
@@ -19,7 +19,7 @@
             @click:append='show1 = !show1'
           )
         v-col(cols='12')
-          v-alert(type="error" v-if="invalidCredentials") Invalid Credentials
+          v-alert(type="error" v-if="invalidCredentials") {{errorMsg}}
           v-row.pa-2
             v-spacer
             v-btn(
@@ -49,6 +49,7 @@ export default {
   },
   data: () => ({
     invalidCredentials: false,
+    errorMsg: "Invalid Credentials",
     password: "",
     username: "",
     rules: {
@@ -107,23 +108,26 @@ export default {
       });
     },
     async signup() {
-      const user = {
-        username: this.username,
-        password: this.password,
-      };
-      await this.registerUser(user).then(() => {
-        if (this.isAuth) {
-          this.$router.push("/admin");
-          this.$emit("close");
-        } else {
-          // Handle error
-          this.handleError();
-        }
-      });
+      try {
+        const user = {
+          username: this.username,
+          password: this.password,
+        };
+        await this.registerUser(user).then(() => {
+          if (this.isAuth) {
+            this.$router.push("/admin");
+            this.$emit("close");
+          }
+        });
+      } catch (error) {
+        const msg = error.response?.data?.message;
+        this.handleError(msg);
+      }
     },
-    handleError() {
+    handleError(msg) {
       this.username = "";
       this.password = "";
+      this.errorMsg = msg;
       this.invalidCredentials = true;
       setTimeout(() => {
         this.invalidCredentials = false;

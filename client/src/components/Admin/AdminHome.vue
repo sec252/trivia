@@ -17,7 +17,7 @@
             v-btn(text)
               | Role: {{authUser.role}}
       AdminTriviaTable(:key="rerender")
-      AdminUsersTable
+      AdminUsersTable(v-if="authUser.role == 'admin'")
 </template>
 
 <script>

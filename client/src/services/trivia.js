@@ -54,7 +54,11 @@ export const TriviaAPI = {
     return res;
   },
   updateTriviaPlays: async (id, data) => {
-    const res = (await apiService.put(`/trivias/${id}/plays`, data)).data;
+    const res = (
+      await apiService.put(`/trivias/${id}/plays`, data, {
+        headers: authHeader(),
+      })
+    ).data;
 
     return res.body;
   },

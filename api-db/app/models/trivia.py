@@ -50,3 +50,23 @@ class Trivia(db.Model):
         self.text = text
         self.answer = answer
         self.trivia_pool_id = trivia_pool_id
+
+
+class TriviaUserPlays(db.Model):
+    __tablename__ = "trivia_user_plays"
+    trivia_id = db.Column(
+        db.Integer, db.ForeignKey("trivia_pool.id"), nullable=False, primary_key=True
+    )
+    user_id = db.Column(
+        db.Integer, db.ForeignKey("users.id"), nullable=False, primary_key=True
+    )
+    plays = db.Column(db.Integer, default=0)
+
+
+class TriviaIPPlay(db.Model):
+    __tablename__ = "trivia_ip_plays"
+    trivia_id = db.Column(
+        db.Integer, db.ForeignKey("trivia_pool.id"), nullable=False, primary_key=True
+    )
+    ip = db.Column(db.String(128), nullable=False, primary_key=True)
+    plays = db.Column(db.Integer, default=0)

@@ -13,7 +13,7 @@
         v-btn(icon @click="$emit('cancel')")
           v-icon mdi-close
       v-card-text
-       v-text-field(v-model="category", label="Enter Category")
+       v-text-field(color="default" v-model="category", label="Enter Category")
        
       v-divider
       v-card-actions

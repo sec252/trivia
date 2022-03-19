@@ -41,9 +41,9 @@ export default {
       return time;
     },
     color() {
-      if (this.plays < 20) {
+      if (this.trivia.plays < 20) {
         return "blue darken-4";
-      } else if (this.plays >= 20 && this.plays < 60) {
+      } else if (this.trivia.plays >= 20 && this.trivia.plays < 60) {
         return "deep-orange darken-4";
       }
 
