@@ -1,8 +1,8 @@
 <template lang="pug">
-  v-app
+  v-app#triviaApp
     NotificationList
     TheNavBar
-    v-main.mt-10
+    v-main.mt-15
       router-view
 
 </template>
@@ -35,3 +35,9 @@ export default {
   },
 };
 </script>
+
+<style>
+#triviaApp {
+  font-family: "Lato";
+}
+</style>

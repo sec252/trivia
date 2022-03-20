@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  v-app-bar(dense fixed)
+  v-app-bar(fixed)
     v-toolbar-title#title Trivia App
     v-spacer
     v-btn(text to="/admin" v-if="isAuth") My Trivias

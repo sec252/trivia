@@ -1,16 +1,17 @@
 <template lang="pug">
   v-container
-    v-row
-      v-col(cols=12 md=6)
-        h1.mt-3 All Trivias
-      v-col(cols=12 md=6)
+    v-card(:color="$vuetify.theme.dark ? '#121212': 'white'" flat).sticky.mb-2.py-3: v-row
+      v-col(cols=12).text-center
+        h1.mt-3 {{title}} 
+      FilterBtn(@order="orderBy")
+      v-col(cols=12 lg=4)
         v-text-field(
-          label="Search Trivia Pools"
+          label="Search Trivias"
+          placeholder="Try Splitgate"
           prepend-icon="mdi-magnify"
+          autofocus
           v-model="search"
-        )
-    FilterBtn(@order="orderBy")
-
+          )
     TriviaList(:trivias="filteredSearch")
 </template>
 
@@ -30,6 +31,7 @@ export default {
     perPage: 10,
     order: "most",
     slug: "",
+    title: "Most Played Trivias",
   }),
   watch: {
     search: function handleSearch(val) {
@@ -78,12 +80,44 @@ export default {
       };
     },
     orderBy(order) {
+      this.setTitle(order);
       this.triviaPools = [];
       this.page = 1;
       this.perPage = 10;
       this.order = order;
       this.getTrivias();
     },
+    setTitle(order) {
+      switch (order) {
+        case "asc":
+          this.title = "Sorted Trivias By Ascending Order";
+          break;
+        case "desc":
+          this.title = "Sorted Trivias By Descending Order";
+          break;
+        case "least":
+          this.title = "Least Played Trivias";
+          break;
+        case "newest":
+          this.title = "Most Recent Trivias";
+          break;
+        case "oldest":
+          this.title = "Oldest Trivias";
+          break;
+        case "most":
+          this.title = "Most Played Trivias";
+      }
+    },
   },
 };
 </script>
+
+<style scoped>
+.sticky {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 64px;
+  z-index: 2;
+  overflow: hidden;
+}
+</style>
