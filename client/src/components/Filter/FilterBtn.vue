@@ -1,7 +1,6 @@
 <template lang="pug">
-v-row(no-gutters)
-  v-col.py-2(cols='12').text-center
-    v-btn-toggle(v-model='icon' borderless rounded)
+  v-col.py-2(cols=12 lg=8).text-center
+    v-btn-toggle(v-model='icon' borderless rounded).mt-7
       v-btn(small value='asc')
         span.hidden-sm-and-down Ascending
         v-icon(right)

@@ -20,11 +20,6 @@ v-card
   v-card-actions
     v-spacer
     v-btn(text @click="createTrivia") Create Trivia Pool
-
-        
-
-
-
 </template>
 
 <script>
