@@ -72,4 +72,12 @@ export const TriviaAPI = {
       headers: authHeader(),
     });
   },
+  answerTrivia: async (id, data) => {
+    const res = (
+      await apiService.put(`/trivias/${id}/answer`, data, {
+        headers: authHeader(),
+      })
+    ).data;
+    return res;
+  },
 };

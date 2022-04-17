@@ -17,6 +17,7 @@
         template(v-for="(q, i) in trivia.questions" v-if="!start")
           TriviaCardQuestion(
             :number="i", 
+            :id="q.id",
             :text="q.text"
             :answer="q.answer"
             :total="trivia.questions.length"
