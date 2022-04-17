@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from flask import request
+from flask import jsonify, request
 from ..services.trivia import TriviaService
 
 api = Namespace("trivias", "Trivia Resource")
@@ -143,3 +143,13 @@ class TriviaPlaysItem(Resource):
     def put(self, trivia_pool_id):
         payload = request.json
         return TriviaService.update_play_by_id(trivia_pool_id, payload)
+
+
+@api.route("/<int:question_id>/answer")
+@api.param("question_id", "Question Identifier")
+class TriviaAnswerItem(Resource):
+    def put(self, question_id):
+        payload = request.json
+        return jsonify(
+            {"isCorrect": TriviaService.answer_question(question_id, payload)}
+        )

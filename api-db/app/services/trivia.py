@@ -4,6 +4,7 @@ from flask import request
 from app.models.users import User, Role
 from app.models.trivia import Trivia, TriviaPool, TriviaUserPlays, TriviaIPPlay
 from app.models.category import Category
+from app.utils.helpers import isCorrect
 from app import db
 from flask_jwt_extended import (
     current_user,
@@ -197,3 +198,13 @@ class TriviaService:
         trivia.plays = trivia.plays + 1
         db.session.commit()
         return trivia
+
+    @jwt_required(optional=True)
+    def answer_question(id, payload):
+
+        response = payload["response"]
+        if not response:
+            raise BadRequest("Need a response")
+        question = TriviaService.get_question_by_id(id)
+
+        return isCorrect(question.answer, response)
