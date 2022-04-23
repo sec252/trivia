@@ -1,3 +1,4 @@
+from tkinter.filedialog import SaveFileDialog
 from app import db
 import datetime
 from app.models.category import Category
@@ -61,6 +62,25 @@ class TriviaUserPlays(db.Model):
         db.Integer, db.ForeignKey("users.id"), nullable=False, primary_key=True
     )
     plays = db.Column(db.Integer, default=0)
+
+
+class TriviaUserScores(db.Model):
+    __tablename__ = "trivia_user_scores"
+    id = db.Column(db.Integer, primary_key=True)
+    trivia_id = db.Column(db.Integer, db.ForeignKey("trivia_pool.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    wrong = db.Column(db.Integer, nullable=False)
+    correct = db.Column(db.Integer, nullable=False)
+    played_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+    @property
+    def score(self):
+        total = self.wrong + self.correct
+        print("TOTAL: ", total)
+
+        score = round((self.correct / total) * 100)
+        print("SCORE:", score)
+        return score
 
 
 class TriviaIPPlay(db.Model):

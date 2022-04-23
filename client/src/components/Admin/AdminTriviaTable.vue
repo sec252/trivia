@@ -1,7 +1,7 @@
 <template lang="pug">
 v-col(:cols="authUser.role =='admin' ? 8 : 12").text-center: v-card(flat)
         v-row(no-gutters).px-2
-            h2.py-2 Trivia Pools
+            h2.py-2 {{authUser.role == "admin" ? "All": "Your"}} Trivia Pools
             v-spacer
             h2.py-2 Total: ({{triviaPools.length}})
         v-data-table(
