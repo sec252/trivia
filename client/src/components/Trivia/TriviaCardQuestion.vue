@@ -16,7 +16,7 @@ v-expand-transition
     v-card-actions
       v-row( no-gutters).mb-2
         v-spacer
-        v-btn(outlined color="white" @click="$emit('prev'); show=false; color='info';" v-if="number>0").mr-2 Previous
+        //- v-btn(outlined color="white" @click="$emit('prev'); show=false; color='info';" v-if="number>0").mr-2 Previous
         v-btn(outlined color="white" @click="next" v-if="show").mr-2 Next
 
 </template>
@@ -63,6 +63,10 @@ export default {
     }),
     async onEnter() {
       try {
+        if (this.color != "info") {
+          this.next();
+          return;
+        }
         const data = {
           response: this.response,
         };
@@ -92,6 +96,7 @@ export default {
     getColor(isCorrect) {
       isCorrect ? (this.color = "success") : (this.color = "error");
       this.show = !this.show;
+      isCorrect ? this.$emit("addCorrect") : this.$emit("addWrong");
     },
   },
 };

@@ -33,6 +33,14 @@ plays = api.model(
         "plays": fields.Integer,
     },
 )
+
+score = api.model(
+    "Score",
+    {
+        "score": fields.Integer,
+    },
+)
+
 trivia_pools = api.model(
     "TriviaPools",
     {
@@ -143,6 +151,14 @@ class TriviaPlaysItem(Resource):
     def put(self, trivia_pool_id):
         payload = request.json
         return TriviaService.update_play_by_id(trivia_pool_id, payload)
+
+
+@api.route("/<int:trivia_pool_id>/score")
+@api.param("trivia_pool_id", "Trivia Pool Identifier")
+class TriviaScoreItem(Resource):
+    def post(self, trivia_pool_id):
+        payload = request.json
+        return TriviaService.create_score(trivia_pool_id, payload)
 
 
 @api.route("/<int:question_id>/answer")

@@ -24,13 +24,15 @@
             v-if="q.text == current"
             @next="updateNext"
             @prev="updatePrev"
+            @addWrong="wrong++"
+            @addCorrect="correct++"
           )
-        v-btn#end( 
-          rounded 
-          color="warning"
-          @click="startTrivia"
-          v-if="end"
-        ) Restart
+        TriviaScoreDialog(
+          :dialog="scoreDialog" 
+          :scoreDetails="scoreDetails" 
+          @cancel="scoreDialog = false; $emit('cancel')" 
+          @restart="startTrivia"
+        )
 
 
 
@@ -39,10 +41,13 @@
 <script>
 import { TriviaAPI } from "../../services/trivia";
 import TriviaCardQuestion from "./TriviaCardQuestion.vue";
+import TriviaScoreDialog from "./TriviaScoreDialog.vue";
+import { mapGetters } from "vuex";
 export default {
   name: "TriviaCardPlay",
   components: {
     TriviaCardQuestion,
+    TriviaScoreDialog,
   },
   props: {
     dialog: {
@@ -58,20 +63,52 @@ export default {
     start: true,
     end: false,
     next: 0,
+    correct: 0,
+    wrong: 0,
+    scoreDialog: false,
+    scoreDetails: {},
     questions: [],
   }),
+  watch: {
+    end: async function handleEnd(val) {
+      // This is where we make  a call to create a record of a score
+      if (val) {
+        let userId;
+        if (this.authUser.id == undefined) {
+          userId = 0;
+        } else {
+          userId = this.authUser.id;
+        }
+        const data = {
+          userId: userId,
+          correct: this.correct,
+          wrong: this.wrong,
+        };
+        const res = await TriviaAPI.createTriviaScore(this.triviaId, data);
+        this.scoreDetails = res;
+        this.scoreDialog = true;
+      }
+    },
+  },
   created() {
     if (this.triviaId !== null) this.getTrivia(this.triviaId);
+  },
+  computed: {
+    ...mapGetters({
+      authUser: "auth/user",
+    }),
   },
   methods: {
     async getTrivia(id) {
       const res = (await TriviaAPI.getTriviaItem(id)).trivia;
-      console.log(res);
       this.trivia = res;
     },
     startTrivia() {
       this.end = false;
       this.start = false;
+      this.correct = 0;
+      this.wrong = 0;
+      this.scoreDialog = false;
       this.trivia?.questions.forEach((q) => {
         this.questions.push(q.text);
       });

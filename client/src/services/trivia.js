@@ -62,6 +62,15 @@ export const TriviaAPI = {
 
     return res.body;
   },
+  createTriviaScore: async (id, data) => {
+    const res = (
+      await apiService.post(`/trivias/${id}/score`, data, {
+        headers: authHeader(),
+      })
+    ).data;
+
+    return res;
+  },
   deleteTriviaItem: async (id) => {
     await apiService.delete("/trivias/" + id, {
       headers: authHeader(),

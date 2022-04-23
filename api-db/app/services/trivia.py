@@ -1,8 +1,14 @@
-from unicodedata import category
+import datetime
 from werkzeug.exceptions import BadRequest
-from flask import request
+from flask import request, jsonify
 from app.models.users import User, Role
-from app.models.trivia import Trivia, TriviaPool, TriviaUserPlays, TriviaIPPlay
+from app.models.trivia import (
+    Trivia,
+    TriviaPool,
+    TriviaUserPlays,
+    TriviaIPPlay,
+    TriviaUserScores,
+)
 from app.models.category import Category
 from app.utils.helpers import isCorrect
 from app import db
@@ -198,6 +204,42 @@ class TriviaService:
         trivia.plays = trivia.plays + 1
         db.session.commit()
         return trivia
+
+    @jwt_required(optional=True)
+    def create_score(id, payload):
+        trivia = TriviaService.get_trivia_pool_by_id(id)
+        user_id = payload["userId"]
+        correct = payload["correct"]
+        wrong = payload["wrong"]
+        user = User.query.get(user_id)
+        if user and user.id == current_user.id:
+
+            new_score = TriviaUserScores(
+                trivia_id=trivia.id, user_id=user.id, correct=correct, wrong=wrong
+            )
+
+            db.session.add(new_score)
+            db.session.commit()
+
+            return jsonify(
+                {
+                    "score": new_score.score,
+                    "correct": new_score.correct,
+                    "wrong": new_score.wrong,
+                    "date": new_score.played_date,
+                }
+            )
+
+        elif not current_user:
+            total = correct + wrong
+            return jsonify(
+                {
+                    "score": round((correct / total) * 100),
+                    "correct": correct,
+                    "wrong": wrong,
+                    "date": datetime.datetime.utcnow(),
+                }
+            )
 
     @jwt_required(optional=True)
     def answer_question(id, payload):
