@@ -27,7 +27,7 @@ const actions = {
       commit("logoutUserState");
     }
   },
-  async fetchUser({ commit }) {
+  async fetchUser({ dispatch, commit }) {
     try {
       const res = (await authService.get("/user", { headers: authHeader() }))
         .data;
@@ -36,7 +36,7 @@ const actions = {
         commit("setUser", res.user);
       }
     } catch (error) {
-      console.log(error);
+      await dispatch("logoutUser");
     }
   },
   async logoutUser({ commit }) {
