@@ -5,7 +5,7 @@
         TriviaCreatePool(@new="addTrivia")
       v-col(cols=6)
         v-card()
-          v-card-title.text-h5 Username: 
+          v-card-title.text-h5 Welcome Back 
             strong.ml-2 {{authUser.username}}
           v-card-text.pt-4
             p(v-if="authUser.active").green--text Active User
