@@ -3,6 +3,7 @@ version: '3.8'
 services:
   api:
     build: ./api-db
+    container_name: trivia_api
     command: python server.py run -h 0.0.0.0
     volumes:
       - ./api-db/:/usr/src/app/
@@ -15,6 +16,7 @@ services:
       
   db:
     image: postgres:13-alpine
+    container_name: trivia_db
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
