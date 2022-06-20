@@ -140,6 +140,12 @@ class TriviaService:
         Trivia.query.filter(Trivia.trivia_pool_id == trivia.id).delete(
             synchronize_session=False
         )
+        TriviaUserPlays.query.filter(TriviaUserPlays.trivia_id == trivia.id).delete(
+            synchronize_session=False
+        )
+        TriviaUserScores.query.filter(TriviaUserScores.trivia_id == trivia.id).delete(
+            synchronize_session=False
+        )
         db.session.delete(trivia)
         db.session.commit()
         return None
